@@ -1,0 +1,80 @@
+﻿@using Dios.ViewModels;
+
+@model Dictionary<int, List<FlatDetailsVM>>
+
+@{
+    ViewData["Title"] = "Lägenheter";
+}
+
+@if (Model.Count == 0)
+{
+    <h2>Inga längenheter tillagda</h2>
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="container">
+        <div>
+            @foreach (int floor in Model.Keys)
+            {
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Values.First().First().Address)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Values.First().First().Number)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Values.First().First().Floor)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Values.First().First().Parameters.First().IsEmailVisible)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Values.First().First().Parameters.First().IsPhoneNumberVisible)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Values.First().First().Parameters.First().CanBeContacted)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (FlatDetailsVM flat in Model[floor])
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.Raw(flat.Address.ToString())
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => flat.Number)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => flat.Floor)
+                                    </td>
+                                    <td>
+                                        @Html.Raw(flat.Parameters.First().IsEmailVisible ? "Ja" : "Nej")
+                                    </td>
+                                    <td>
+                                        @Html.Raw(flat.Parameters.First().IsPhoneNumberVisible ? "Ja" : "Nej")
+                                    </td>
+                                    <td>
+                                        @Html.Raw(flat.Parameters.First().CanBeContacted ? "Ja" : "Nej")
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-controller="Parameter" asp-route-flatId="@flat.ID">Redigera</a> |
+                                        <a asp-action="ErrorReports" asp-controller="Users" asp-route-flatId="@flat.ID">Felanmälningar</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

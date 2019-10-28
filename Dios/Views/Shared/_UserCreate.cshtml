@@ -1,0 +1,70 @@
+﻿@model Dios.ViewModels.UsersViewModels.UserCreateVM
+
+<hr />
+
+@{
+    if (Model != null && !string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        var statusMessageClass = Model.StatusMessage.StartsWith("Error") ? "danger" : "success";
+        <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            @Html.Raw(Model.StatusMessage)
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PersonalNumber" class="control-label"></label>
+                <input asp-for="PersonalNumber" class="form-control" placeholder="ÅÅÅÅMMDD-XXXX" autofocus />
+                <span asp-validation-for="PersonalNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" placeholder="@Html.DisplayNameFor(model=>Model.FirstName)" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" placeholder="@Html.DisplayNameFor(model=>Model.LastName)" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="@Html.DisplayNameFor(model=>Model.Email)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="@Html.DisplayNameFor(model=>Model.PhoneNumber)" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            @if (Model.IsPhoneNumber2Visible)
+            {
+                <div class="form-group">
+                    <label asp-for="PhoneNumber2" class="control-label"></label>
+                    <input asp-for="PhoneNumber2" class="form-control" placeholder="@Html.DisplayNameFor(model=>Model.PhoneNumber2)" />
+                    <span asp-validation-for="PhoneNumber2" class="text-danger"></span>
+                </div>
+
+                @*<div class="form-group">
+                    <label asp-for="CreateMatchingUser" class="control-label"></label>
+                </div>*@
+            }
+            <div class="form-group">
+                <input type="submit" value="Skapa" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Tillbaka</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

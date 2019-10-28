@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Dios.ViewModels.AddressDetailsVM>
+
+@{
+    ViewData["Title"] = "Byggnader";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Street)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ZipCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Town)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountFlats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountAvailableFlats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountUsers)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountHosts)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Street)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Town)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountFlats)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountAvailableFlats)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountUsers)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountHosts)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-controller="Addresses" asp-route-id="@item.ID">Se detaljer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

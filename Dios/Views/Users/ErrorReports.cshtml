@@ -1,0 +1,74 @@
+﻿@using Dios.Extensions;
+@using Dios.Models;
+@using Dios.ViewModels.ErrorReports;
+
+@model ErrorReportsVM
+
+@{
+    ViewData["Title"] = "Felanmälningar";
+}
+
+<h2>@ViewData["Title"] (@Model.Flat)</h2>
+
+<div class="container">
+    <div>
+        <a class="btn btn-info" asp-action="ErrorReport" asp-controller="Users" asp-route-flatId="@Model.FlatId">Skicka en ny felanmälning</a>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ErrorReports.First().Submitted)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ErrorReports.First().Subject)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ErrorReports.First().Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ErrorReports.First().Seen)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ErrorReports.First().CurrentPriority)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ErrorReports.First().CurrentStatus)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ErrorReportDTO errorReport in Model.ErrorReports)
+                    {
+                        <tr>
+                            <td>
+                                @Html.Raw(errorReport.Submitted.ToString())
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => errorReport.Subject)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => errorReport.Description)
+                            </td>
+                            <td>
+                                @Html.Raw(errorReport.Seen == null ? "Nej" : errorReport.Seen.ToString())
+                            </td>
+                            <td>
+                                @Html.Raw(errorReport.CurrentPriority.GetDescription())
+                            </td>
+                            <td>
+                                @Html.Raw(errorReport.CurrentStatus.GetDescription())
+                            </td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <a asp-action="Index" asp-controller="Home">Tillbaka</a>
+        </div>
+    </div>
+</div>

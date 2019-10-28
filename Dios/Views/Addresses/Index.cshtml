@@ -1,0 +1,134 @@
+﻿@using System.Web;
+
+@{
+    ViewData["Title"] = "Byggnader";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="~/app/modules/modules.js"></script>
+
+<script src="~/app/factories/Cookies.js"></script>
+
+<script src="~/app/factories/Addresses.js"></script>
+<script src="~/app/controllers/AddressesController.js"></script>
+
+<h2>@ViewData["Title"]</h2>
+
+<div ng-app="addresses" ng-controller="AddressesCtrl" ng-init="getAddresses()">
+    <div class="left">
+        <form class="glyphicon glyphicon-search" method="get">
+            <input type="text"
+                   name="Search"
+                   ng-model="searchTerm"
+                   placeholder="Sök"
+                   class="form-group"
+                   style="width:120px;
+                          height:25px;
+                          font-style: normal;
+                          font-variant-ligatures: normal;
+                          font-variant-caps: normal;
+                          font-variant-numeric: normal;
+                          font-variant-east-asian: normal;
+                          font-weight: 400;
+                          font-stretch: normal;
+                          font-size: 13.3333px;
+                          line-height: normal;
+                          font-family: Arial;"
+                   autofocus />
+        </form>
+        <label style="margin-left: 20px;">{{amountAddresses = (addresses | filter:search(searchTerm)).length}} byggnad<span ng-hide="amountAddresses < 2">er</span> hittade</label>
+    </div>
+
+    <p>
+        <a class="btn btn-info" role="button" asp-action="Create">Registrera en ny adress</a>
+    </p>
+
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th ng-click="orderBy('street')">
+                    Gata <span id="street"
+                               ng-show="myOrderBy === 'street'"
+                               class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('number')">
+                    Nummer <span id="number"
+                                 ng-show="myOrderBy === 'number'"
+                                 class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('zipCode')">
+                    Postkod <span id="zipCode"
+                                  ng-show="myOrderBy === 'zipCode'"
+                                  class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('town')">
+                    Ort <span id="town"
+                              ng-show="myOrderBy === 'town'"
+                              class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('country')">
+                    Land <span id="country"
+                               ng-show="myOrderBy === 'country'"
+                               class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('amountFlats')">
+                    Antal lägenheter <span id="amountFlats"
+                                           ng-show="myOrderBy === 'amountFlats'"
+                                           class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('amountAvailableFlats')">
+                    Antal lediga lägenheter <span id="amountAvailableFlats"
+                                                  ng-show="myOrderBy === 'amountAvailableFlats'"
+                                                  class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('amountUsers')">
+                    Antal boende <span id="amountUsers"
+                                       ng-show="myOrderBy === 'amountUsers'"
+                                       class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('amountHosts')">
+                    Antal hyresansvariga <span id="amountHosts"
+                                               ng-show="myOrderBy === 'amountHosts'"
+                                               class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="address in addresses | orderBy:myOrderBy:reverse | filter:search(searchTerm) ">
+                @{
+                    var urlEdit = Url.Action("Edit", new { ID = "{{id = address.id}}" });
+                    urlEdit = HttpUtility.UrlDecode(urlEdit);
+
+                    var urlDetails = Url.Action("Details", new { ID = "{{id = address.id}}" });
+                    urlDetails = HttpUtility.UrlDecode(urlDetails);
+
+                    var urlDelete = Url.Action("Delete", new { ID = "{{id = address.id}}" });
+                    urlDelete = HttpUtility.UrlDecode(urlDelete);
+
+                    var urlExport = Url.Action("ExportUsers", new { ID = "{{id = address.id}}" });
+                    urlExport = HttpUtility.UrlDecode(urlExport);
+                }
+
+                <td>{{address.street}}</td>
+                <td>{{address.number}}</td>
+                <td>{{address.zipCode}}</td>
+                <td>{{address.town}}</td>
+                <td>{{address.country}}</td>
+                <td>{{address.amountFlats}}</td>
+                <td>{{address.amountAvailableFlats}}</td>
+                <td>{{address.amountUsers}}</td>
+                <td>{{address.amountHosts}}</td>
+                <td>
+                    <a data-ng-href="@urlEdit">Redigera</a> |
+                    <a data-ng-href="@urlDetails">Se detaljer</a> |
+                    <a data-ng-href="@urlDelete">Radera</a> |
+                    <br>
+                    <a data-ng-href="@urlExport">Exportera boendeslistorna</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

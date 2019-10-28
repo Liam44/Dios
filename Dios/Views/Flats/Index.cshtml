@@ -1,0 +1,103 @@
+﻿@model int;
+
+@{
+    ViewData["Title"] = "Lägenheter";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="~/app/modules/modules.js"></script>
+
+<script src="~/app/modal/modal.service.js"></script>
+<script src="~/app/modal/modal.directive.js"></script>
+
+<script src="~/app/factories/Users.js"></script>
+<script src="~/app/factories/Cookies.js"></script>
+<script src="~/app/controllers/UsersController.js"></script>
+
+@*<link href="~/css/modal.css" rel="stylesheet" type="text/css" />*@
+
+<div class="container" ng-app="users" ng-controller="UsersCtrl" ng-init="getUsersAtAddress(@Model)">
+    <div class="panel" ng-repeat="userGroupBy in usersAtAddressGroupBy">
+        <h2 style="text-align:center;">{{getKey(usersAtAddressGroupBy, userGroupBy)}}</h2>
+        <hr />
+
+        <div ng-repeat="user in userGroupBy">
+            <div class="collapsable" style="height:75px;text-align:center" ng-click="changeGlyph(user.id)" data-toggle="collapse" href="#{{user.id}}">
+                <div class="panel-heading">
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="border-bottom:thin solid red; padding-bottom: 15px;">
+                        <h4 class="panel-title">
+                            <b>{{user.lastName}} {{user.firstName}}</b>
+                        </h4>
+                    </div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                    </div>
+
+                    <div>
+                        <span id="{{user.id}} " class="glyphicon {{glyph(user.id)}}" style="color:white"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="{{user.id}}" class="collapse">
+                <div align="justify">
+                    <div class="panel-body" ng-repeat="parameterGroupBy in user.parameters">
+                        <h4 style="white-space:pre-wrap;"><b><u>Våning {{getKey(user.parameters, parameterGroupBy)}}</u></b></h4>
+                        <div ng-repeat="parameter in parameterGroupBy">
+                            <p style="white-space:pre-wrap;"><b>Lägenhet {{parameter.flat.entryDoorCode}}</b></p>
+                            <p style="white-space:pre-wrap;"><b>Lägenhet {{parameter.flat.number}}</b></p>
+                            <p style="white-space:pre-wrap;" ng-show="parameter.isEmailVisible"><b>E-post</b> {{user.email}}</p>
+                            <p style="white-space:pre-wrap;" ng-show="parameter.isPhoneNumberVisible && user.phoneNumber !== null"><b>Telefonnummer</b> {{user.phoneNumber}}</p>
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2 style="text-align:center;">Hyresansvarig<span ng-show="moreThanOneHost()">ar</span></h2>
+        <hr />
+
+        <div class="panel" ng-repeat="hostGroupBy in hostsAtAddressGroupBy">
+            <div ng-repeat="host in hostGroupBy">
+                <div class="collapsable" style="height:75px;text-align:center" ng-click="changeGlyph(host.id)" data-toggle="collapse" href="#{{host.id}}">
+                    <div class="panel-heading">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-xs-4" style="border-bottom:thin solid red; padding-bottom: 15px;">
+                            <h4 class="panel-title">
+                                <b>{{host.lastName}} {{host.firstName}}</b>
+                            </h4>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                        </div>
+
+                        <div>
+                            <span id="{{host.id}} " class="glyphicon {{glyph(host.id)}}" style="color:white"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="{{host.id}}" class="collapse">
+                    <div align="justify">
+                        <div class="panel-body">
+                            <p style="white-space:pre-wrap;"><b>E-post</b> {{host.email}}</p>
+                            <p style="white-space:pre-wrap;"><b>Telefonnummer</b> {{host.phoneNumber}}</p>
+                            <p style="white-space:pre-wrap;" ng-show="host.phoneNumber2 !== null"><b>Alt. telefonnummer</b> {{host.phoneNumber2}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

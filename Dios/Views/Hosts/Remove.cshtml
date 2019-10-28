@@ -1,0 +1,66 @@
+﻿@model Dios.ViewModels.AddressHostDetailsVM
+
+@{
+    ViewData["Title"] = "Ta bort " + Model.Host.ToString();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Vill du verkligen ta bort denna hyresansvarig?</h3>
+<div>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Host.PersonalNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.Host.FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model.Host.LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.Host.Email)</th>
+                <th>@Html.DisplayNameFor(model => model.Host.PhoneNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.Host.PhoneNumber2)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayFor(model => model.Host.PersonalNumber)</td>
+                <td>@Html.DisplayFor(model => model.Host.FirstName)</td>
+                <td>@Html.DisplayFor(model => model.Host.LastName)</td>
+                <td>@Html.DisplayFor(model => model.Host.Email)</td>
+                <td>@Html.DisplayFor(model => model.Host.PhoneNumber)</td>
+                <td>@Html.DisplayFor(model => model.Host.PhoneNumber2)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Från</h3>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Address.Street)</th>
+                <th>@Html.DisplayNameFor(model => model.Address.Number)</th>
+                <th>@Html.DisplayNameFor(model => model.Address.ZipCode)</th>
+                <th>@Html.DisplayNameFor(model => model.Address.Town)</th>
+                <th>@Html.DisplayNameFor(model => model.Address.Country)</th>
+                <th>@Html.DisplayNameFor(model => model.Address.AmountFlats)</th>
+                <th>@Html.DisplayNameFor(model => model.Address.AmountUsers)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayFor(model => model.Address.Street)</td>
+                <td>@Html.DisplayFor(model => model.Address.Number)</td>
+                <td>@Html.DisplayFor(model => model.Address.ZipCode)</td>
+                <td>@Html.DisplayFor(model => model.Address.Town)</td>
+                <td>@Html.DisplayFor(model => model.Address.Country)</td>
+                <td>@Html.DisplayFor(model => model.Address.AmountFlats)</td>
+                <td>@Html.DisplayFor(model => model.Address.AmountUsers)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form asp-action="Remove" asp-route-addressId="@Model.Address.ID" asp-route-id="@Model.Host.Id">
+        <input type="submit" value="Ta bort" class="btn btn-info" /> |
+        <a asp-action="Details" asp-controller="Addresses" asp-route-id="@Model.Address.ID">Tillbaka</a>
+    </form>
+</div>

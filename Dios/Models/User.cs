@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dios.Models
@@ -8,23 +7,17 @@ namespace Dios.Models
     public class User : IdentityUser
     {
         [Required]
+        public string PersonalNumber { get; set; }
+
+        [Required]
         public string FirstName { get; set; }
 
         [Required]
         public string LastName { get; set; }
 
-        [Required]
-        public bool IsNameShown { get; set; }
+        public string PhoneNumber2 { get; set; }
 
         [Required]
-        public bool IsEmailShown { get; set; }
-
-        [Required]
-        public bool IsPhoneNumberShown { get; set; }
-
-        [Required]
-        public bool CanBeContacted { get; set; }
-
-        public ICollection<UserFlat> UserFlats { get; set; } = new List<UserFlat>();
+        public string RegistrationCode { get; set; }
     }
 }

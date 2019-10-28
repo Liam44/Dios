@@ -1,0 +1,33 @@
+﻿@model Dios.ViewModels.ParameterEditVM
+@{
+    ViewData["Title"] = "Redigera";
+}
+
+<div>
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input hidden asp-for="FlatID" />
+        <input hidden asp-for="UserId" />
+        <div class="form-group">
+            <label asp-for="IsEmailVisible"></label>
+            <p><input type="radio" asp-for="IsEmailVisible" value=true />Ja</p>
+            <p><input type="radio" asp-for="IsEmailVisible" value=false />Nej</p>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsPhoneNumberVisible"></label>
+            <p><input type="radio" asp-for="IsPhoneNumberVisible" value=true />Ja</p>
+            <p><input type="radio" asp-for="IsPhoneNumberVisible" value=false />Nej</p>
+        </div>
+        <div class="form-group">
+            <label asp-for="CanBeContacted"></label>
+            <p><input type="radio" asp-for="CanBeContacted" value=true />Ja</p>
+            <p><input type="radio" asp-for="CanBeContacted" value=false />Nej</p>
+        </div>
+
+        <button type="submit" class="btn btn-info">Spara</button>
+
+        <div>
+            <a asp-action="Index" asp-controller="Home">Tillbaka</a>
+        </div>
+    </form>
+</div>

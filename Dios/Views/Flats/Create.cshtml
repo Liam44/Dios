@@ -1,0 +1,58 @@
+﻿@model Dios.ViewModels.FlatCreateVM
+
+@{
+    ViewData["Title"] = "Skapa en ny lägenhet";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    var statusMessageClass = Model.StatusMessage.StartsWith("Error") ? "danger" : "success";
+    <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Html.Raw(Model.StatusMessage)
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <h4>@Model.Address.ToString()</h4>
+        </div>
+
+        <form asp-action="Create" asp-route-addressId="@ViewBag">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Floor" class="control-label"></label>
+                <input asp-for="Floor" class="form-control" value="@Model.Floor" min="-5" max="200" autofocus />
+                <span asp-validation-for="Floor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EntryDoorCode" class="control-label"></label>
+                <input asp-for="EntryDoorCode" class="form-control" />
+                <span asp-validation-for="EntryDoorCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="AddressID" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Skapa" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-controller="Addresses" asp-route-id="@Model.AddressID">Tillbaka</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

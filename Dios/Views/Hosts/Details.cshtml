@@ -1,0 +1,104 @@
+﻿@using Dios.ViewModels;
+
+@model UserDetailsVM
+
+@{
+    ViewData["Title"] = @Model.ToString() + " - Detaljer";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <hr />
+    <h4>Personuppgifter</h4>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonalNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber2)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.PersonalNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.PhoneNumber2)
+            </td>
+        </tr>
+    </table>
+
+    <hr />
+    <h4>Ansvarig för</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().Street)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().Number)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().ZipCode)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().Town)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().Country)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().AmountFlats)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().AmountUsers)</th>
+                <th>@Html.DisplayNameFor(model => Model.Addresses.Values.First().First().AmountHosts)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (int addressId in Model.Addresses.Keys)
+            {
+                @foreach (AddressDetailsVM address in Model.Addresses[addressId])
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => address.Street)</td>
+                        <td>@Html.DisplayFor(model => address.Number)</td>
+                        <td>@Html.DisplayFor(model => address.ZipCode)</td>
+                        <td>@Html.DisplayFor(model => address.Town)</td>
+                        <td>@Html.DisplayFor(model => address.Country)</td>
+                        <td>@Html.DisplayFor(model => address.AmountFlats)</td>
+                        <td>@Html.DisplayFor(model => address.AmountUsers)</td>
+                        <td>@Html.DisplayFor(model => address.AmountHosts)</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Addresses" asp-route-id="@addressId">Redigera</a> |
+                            <a asp-action="Details" asp-controller="Addresses" asp-route-id="@addressId">Detaljer</a> |
+                            <a asp-action="Delete" asp-controller="Addresses" asp-route-id="@addressId">Radera</a> |
+                            <a asp-action="Remove" asp-controller="Hosts" asp-route-id="@Model.Id" asp-route-addressId="@addressId">Ta bort</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a class="btn btn-default" asp-action="Edit" asp-route-id="@Model.Id">Redigera</a> |
+    <a asp-action="Index">Tillbaka</a>
+</div>

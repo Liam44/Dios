@@ -1,0 +1,67 @@
+﻿@using Dios.ViewModels;
+
+@model FlatDetailsVM
+
+@{
+    ViewData["Title"] = "Lägenhet - Detaljer";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.EntryDoorCode)</th>
+                <th>@Html.DisplayNameFor(model => model.Floor)</th>
+                <th>@Html.DisplayNameFor(model => model.Number)</th>
+                <th>@Html.DisplayNameFor(model => model.Address)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayFor(model => model.EntryDoorCode)</td>
+                <td>@Html.DisplayFor(model => model.Floor)</td>
+                <td>@Html.DisplayFor(model => model.Number)</td>
+                <td>@Model.Address.ToString()</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Boende</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Parameters.First().User.LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.Parameters.First().User.FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model.Parameters.First().User.Email)</th>
+                <th>@Html.DisplayNameFor(model => model.Parameters.First().User.PhoneNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.Parameters.First().User.PhoneNumber2)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ParameterDetailsVM parameter in Model.Parameters)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => parameter.User.LastName)</td>
+                    <td>@Html.DisplayFor(model => parameter.User.FirstName)</td>
+                    <td>@Html.DisplayFor(model => parameter.User.Email)</td>
+                    <td>@Html.DisplayFor(model => parameter.User.PhoneNumber)</td>
+                    <td>@Html.DisplayFor(model => parameter.User.PhoneNumber2)</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Users" asp-route-id="@parameter.User.Id">Redigera</a> |
+                        <a asp-action="Details" asp-controller="Users" asp-route-id="@parameter.User.Id">Se detaljer</a> |
+                        <a asp-action="Remove" asp-controller="Flats" asp-route-flatId="@Model.ID" asp-route-userId="@parameter.User.Id">Flytta ut</a> |
+                        <a asp-action="Delete" asp-controller="Users" asp-route-id="@parameter.User.Id">Radera</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a class="btn btn-default" asp-action="Edit" asp-route-id="@Model.ID">Redigera</a> |
+    <a asp-action="Details" asp-controller="Addresses" asp-route-id="@Model.Address.ID">Tillbaka till adressen</a>
+</div>

@@ -1,0 +1,44 @@
+﻿@model Dios.ViewModels.AddressDetailsVM
+
+@{
+    ViewData["Title"] = "Radera en byggnad";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Vill du verkligen radera denna byggnad?</h3>
+<div>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Street)</th>
+                <th>@Html.DisplayNameFor(model => model.Number)</th>
+                <th>@Html.DisplayNameFor(model => model.ZipCode)</th>
+                <th>@Html.DisplayNameFor(model => model.Town)</th>
+                <th>@Html.DisplayNameFor(model => model.Country)</th>
+                <th>@Html.DisplayNameFor(model => model.AmountFlats)</th>
+                <th>@Html.DisplayNameFor(model => model.AmountUsers)</th>
+                <th>@Html.DisplayNameFor(model => model.AmountHosts)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayFor(model => model.Street)</td>
+                <td>@Html.DisplayFor(model => model.Number)</td>
+                <td>@Html.DisplayFor(model => model.ZipCode)</td>
+                <td>@Html.DisplayFor(model => model.Town)</td>
+                <td>@Html.DisplayFor(model => model.Country)</td>
+                <td>@Html.DisplayFor(model => model.AmountFlats)</td>
+                <td>@Html.DisplayFor(model => model.AmountUsers)</td>
+                <td>@Html.DisplayFor(model => model.AmountHosts)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Radera" class="btn btn-default" /> |
+        <a asp-action="Index">Tillbaka</a>
+    </form>
+</div>

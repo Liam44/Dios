@@ -1,0 +1,29 @@
+﻿@model Dios.ViewModels.ErrorReports.ErrorReportCreateVM;
+
+@{
+    ViewData["Title"] = "Anmäl fel på din lägenhet";
+}
+
+<h2>@ViewData["Title"] (@Model.Flat)</h2>
+
+<div class="container">
+    <div>
+        <form asp-action="ErrorReport">
+            @Html.HiddenFor(model => model.FlatId)
+            @Html.HiddenFor(model => model.Flat)
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" autofocus />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-info">Skicka</button>
+            <a class="btn btn-default" asp-action="Flats" asp-controller="Users" asp-route-flatId="@Model.FlatId">Cancel</a>
+        </form>
+    </div>
+</div>

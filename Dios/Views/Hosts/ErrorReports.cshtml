@@ -1,0 +1,85 @@
+﻿<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="~/app/modules/modules.js"></script>
+
+<script src="~/app/factories/Hosts.js"></script>
+<script src="~/app/controllers/HostsController.js"></script>
+
+<div class="row" ng-app="hosts" ng-controller="HostsCtrl" ng-init="getErrorReports()">
+    <br />
+    <div class="col-md-4">
+        <div ng-repeat="(addressId, errorReportAPI) in errorReports">
+            <div ng-click="changeGlyph(addressId)" data-toggle="collapse" href="#{{addressId}}">
+                <h4 class="panel-title" ng-style="{'font-weight': errorReportAPI.unseen ? 'bold' : 'normal' }">{{errorReportAPI.address}} <span class="glyphicon {{glyph(addressId)}}"></span></h4>
+            </div>
+            <div id="{{addressId}}" class="collapse">
+                <ul>
+                    <li id="" ng-repeat="e in errorReportAPI.errorReports">
+                        <div ng-switch="e.currentPriority">
+                            <div ng-switch-when="-1" ng-click="setCurrentErrorReport(addressId, e.id)" style="background-color:none;">
+                                <h5 ng-style="{'font-weight': e.seen === null ? 'bold' : 'normal' }">{{e.description}}</h5>
+                            </div>
+                            <div ng-switch-when="0" ng-click="setCurrentErrorReport(addressId, e.id)" style="background-color:red;">
+                                <h5 ng-style="{'font-weight': e.seen === null ? 'bold' : 'normal' }">{{e.description}}</h5>
+                            </div>
+                            <div ng-switch-when="1" ng-click="setCurrentErrorReport(addressId, e.id)" style="background-color:yellow;">
+                                <h5 ng-style="{'font-weight': e.seen === null ? 'bold' : 'normal' }">{{e.description}}</h5>
+                            </div>
+                            <div ng-switch-when="2" ng-click="setCurrentErrorReport(addressId, e.id)" style="background-color:lightblue;">
+                                <h5 ng-style="{'font-weight': e.seen === null ? 'bold' : 'normal' }">{{e.description}}</h5>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8" ng-show="currentErrorReport">
+        <h2>Lagenhet {{currentErrorReport.flat.number}}</h2>
+        <b>
+            Ämne
+        </b>
+        <br />
+        {{currentErrorReport.subject}}
+        <br />
+        <b>
+            Beskrivning
+        </b>
+        <br />
+        <div style="height:144px;overflow:hidden;overflow-y:scroll;border:thin;">{{currentErrorReport.description}}</div>
+        <div class="col-md-6">
+            <br />
+            <b>
+                Prioritet
+            </b>
+            <br />
+            <select ng-model="priorityOptions" ng-options="x for x in priorities" style="width:inherit" ng-change="save()"></select>
+            <br />
+            <b>
+                Status
+            </b>
+            <br />
+            <select ng-model="statusOptions" ng-options="x for x in status" style="width:inherit" ng-change="save()"></select>
+        </div>
+        <div class="col-md-6">
+            <br />
+            <b>
+                Comments
+            </b>
+            <br />
+            <textarea type="text" rows="3" style="height:66px;width:inherit;resize:none;"></textarea>
+        </div>
+    </div>
+    @*<div>
+            <div class="col-md-4">
+                <button ng-click="save()">
+                    Save
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button ng-click="cancel()">
+                    Cancel
+                </button>
+            </div>
+        </div>*@
+</div>

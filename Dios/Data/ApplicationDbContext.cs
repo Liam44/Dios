@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Dios.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Dios.Models;
 
 namespace Dios.Data
 {
@@ -22,8 +18,18 @@ namespace Dios.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
-            builder.Entity<UserFlat>()
-                   .HasKey(uf => new { uf.UserID, uf.FlatID });
+            builder.Entity<AddressHost>()
+                   .HasKey(ah => new { ah.UserId, ah.AddressID });
+
+            builder.Entity<Parameter>()
+                   .HasKey(uf => new { uf.UserId, uf.FlatID });
         }
+
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<AddressHost> AddressHosts { get; set; }
+        public DbSet<Flat> Flats { get; set; }
+        public DbSet<Parameter> Parameters { get; set; }
+        public DbSet<ErrorReport> ErrorReports { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

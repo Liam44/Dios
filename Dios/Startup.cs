@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Dios.Controllers;
+using Dios.Data;
+using Dios.Helpers;
+using Dios.Models;
+using Dios.Repositories;
+using Dios.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Dios.Data;
-using Dios.Models;
-using Dios.Services;
 
 namespace Dios
 {
@@ -32,6 +31,21 @@ namespace Dios
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            // Add repos as scoped dependency so they are shared per request.
+            services.AddScoped<IAddressesRepository, AddressesRepository>();
+            services.AddScoped<IFlatsRepository, FlatsRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IParametersRepository, ParametersRepository>();
+            services.AddScoped<IAddressHostsRepository, AddressHostsRepository>();
+            services.AddScoped<IErrorReportsRepository, ErrorReportsRepository>();
+
+            services.AddScoped<IRequestUserProvider, RequestUserProvider>();
+            services.AddScoped<IRequestSignInProvider, RequestSignInProvider>();
+            services.AddScoped<INewUser, NewUser>();
+            services.AddScoped<ILog<AccountController>, Log<AccountController>>();
+
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

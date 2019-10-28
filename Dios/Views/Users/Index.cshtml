@@ -1,0 +1,106 @@
+﻿@using System.Web;
+
+@*<script type="text/javascript" src="~/js/lodash.min.js"></script>*@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="~/app/modules/modules.js"></script>
+
+<script src="~/app/factories/Cookies.js"></script>
+
+<script src="~/app/modal/modal.service.js"></script>
+<script src="~/app/modal/modal.directive.js"></script>
+
+<script src="~/app/factories/Users.js"></script>
+<script src="~/app/controllers/UsersController.js"></script>
+
+@*<script src="~/js/taggedInfiniteScroll.min.js"></script>*@
+
+@{
+    ViewData["Title"] = "Boende";
+}
+
+<h2>Boende</h2>
+
+<div ng-app="users" ng-controller="UsersCtrl" ng-init="getUsers()">
+    <div class="left">
+        <form class="glyphicon glyphicon-search" method="get">
+            <input type="text"
+                   name="Search"
+                   ng-model="searchTerm"
+                   placeholder="Sök"
+                   style="width:120px;
+                          height:25px;
+                          font-style: normal;
+                          font-variant-ligatures: normal;
+                          font-variant-caps: normal;
+                          font-variant-numeric: normal;
+                          font-variant-east-asian: normal;
+                          font-weight: 400;
+                          font-stretch: normal;
+                          font-size: 13.3333px;
+                          line-height: normal;
+                          font-family: Arial;"
+                   autofocus />
+        </form>
+        <label style="margin-left: 20px;">{{(users | filter:search(searchTerm)).length}} boende hittade</label>
+    </div>
+
+    <a asp-action="Create" class="btn btn-info" style="margin: 10px auto 10px auto">Skapa en ny boende</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th ng-click="orderBy('personalNumber')">
+                    Personnummer <span id="personalNumber"
+                                  ng-show="myOrderBy === 'personalNumber'"
+                                  class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('firstName')">
+                    Förnamn <span id="firstName"
+                                  ng-show="myOrderBy === 'firstName'"
+                                  class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('lastName')">
+                    Efternamn <span id="lastName"
+                                    ng-show="myOrderBy === 'lastName'"
+                                    class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('email')">
+                    E-post <span id="email"
+                                 ng-show="myOrderBy === 'email'"
+                                 class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th ng-click="orderBy('phoneNumber')">
+                    Telefonnummer <span id="phoneNumber"
+                                        ng-show="myOrderBy === 'phoneNumber'"
+                                        class="glyphicon glyphicon-triangle-bottom"></span>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in users | orderBy:myOrderBy:reverse | filter:search(searchTerm) ">
+                @{
+                    var urlEdit = Url.Action("Edit", new { ID = "{{id = user.id}}" });
+                    urlEdit = HttpUtility.UrlDecode(urlEdit);
+
+                    var urlDetails = Url.Action("Details", new { ID = "{{id = user.id}}" });
+                    urlDetails = HttpUtility.UrlDecode(urlDetails);
+
+                    var urlDelete = Url.Action("Delete", new { ID = "{{id = user.id}}" });
+                    urlDelete = HttpUtility.UrlDecode(urlDelete);
+                }
+
+                <td>{{user.personalNumber}}</td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.phoneNumber}}</td>
+                <td>
+                    <a data-ng-href="@urlEdit">Redigera</a> |
+                    <a data-ng-href="@urlDetails">Se detaljer</a> |
+                    <a data-ng-href="@urlDelete">Radera</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

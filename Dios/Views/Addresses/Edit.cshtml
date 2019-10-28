@@ -1,0 +1,92 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Redigera adressen";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="~/app/modules/modules.js"></script>
+
+<script src="~/app/factories/Cookies.js"></script>
+
+<script src="~/app/factories/Addresses.js"></script>
+<script src="~/app/controllers/AddressesController.js"></script>
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+<div class="row" ng-app="addresses" ng-controller="AddressesCtrl" ng-init="loadModel(@Model)">
+    <p>
+        <a class="btn btn-info" role="button" asp-action="Create" asp-controller="Flats" asp-route-addressId="@Model">Skapa en ny lägenhet</a>
+    </p>
+
+    <div class="alert alert-success alert-dismissible" role="alert" ng-show="success">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="dismissMessage()"><span aria-hidden="true">&times;</span></button>
+        {{success}}
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label class="control-label">Gata</label>
+            <input id="street" ng-model="street" class="form-control" />
+            <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">{{errors['Street']}}</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Nummer</label>
+            <input id="number" ng-model="number" class="form-control" />
+            <span class="text-danger field-validation-error" data-valmsg-for="Number" data-valmsg-replace="true">{{errors['Number']}}</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Postkod</label>
+            <input id="zipCode" ng-model="zipCode" class="form-control" />
+            <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">{{errors['ZipCode']}}</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Ort</label>
+            <input id="town" ng-model="town" class="form-control" />
+            <span class="text-danger field-validation-error" data-valmsg-for="Town" data-valmsg-replace="true">{{errors['Town']}}</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Land</label>
+            <input id="country" ng-model="country" class="form-control" />
+            <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">{{errors['Country']}}</span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Spara" class="btn btn-info" ng-click="sendData()" />
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="form-group col-md-5 col-sm-5">
+            <h6>Byggnadens hyresansvarigar</h6>
+            <input type="text"
+                   id="filterHosts"
+                   name="filterHosts"
+                   placeholder="Filtrera byggnadens hyresansvariga"
+                   class="form-control search"
+                   size="50" />
+            <select id="hosts" multiple="multiple" class="listbox form-control"></select>
+        </div>
+        <div class="col-md-2 col-sm-2">
+            <button ng-click="setHosts()" style="margin: 80px auto 10px auto; width: 100%"><b>&larr;</b></button>
+            <button ng-click="setAvailableHosts()" style="margin-left: auto; margin-right: auto; width: 100%"><b>&rarr;</b></button>
+        </div>
+        <div class="form-group col-md-5 col-sm-5">
+            <h6>Lediga hyresansvarigar</h6>
+            <input type="text"
+                   id="filterAvailableHosts"
+                   name="filterAvailableHosts"
+                   placeholder="Filtrera lediga hyresansvariga"
+                   class="form-control search"
+                   size="50" />
+            <select id="available" multiple="multiple" class="listbox form-control"></select>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Tillbaka</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

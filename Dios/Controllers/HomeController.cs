@@ -1,32 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Dios.Extensions;
 using Dios.Models;
+using Dios.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Dios.Controllers
 {
     public class HomeController : Controller
     {
+        IUsersRepository _usersRepository;
+
+        public HomeController(IUsersRepository usersRepository)
+        {
+            _usersRepository = usersRepository;
+        }
+
         public IActionResult Index()
         {
-            return View();
-        }
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction(nameof(AccountController.Login), "Account");
+            else if (User.IsInRole("Admin"))
+                return RedirectToAction(nameof(AddressesController.Index), "Addresses");
+            else
+            {
+                // Checks if the user has just logged in for the first time
+                UserDTO user = _usersRepository.User(User.Id());
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
+                if (!string.IsNullOrEmpty(user.RegistrationCode))
+                {
+                    // If so, they're redirected to the "Change password" view
+                    return RedirectToAction(nameof(AccountController.ChangePassword), "Account");
+                }
 
-            return View();
-        }
+                if (User.IsInRole("User"))
+                {
+                    // Otherwise, they're redirected to the "Flats/Index" view
+                    return RedirectToAction(nameof(UsersController.Flats), "Users");
+                }
+                else
+                {
+                    // Otherwise, they're redirected to the "Flats/Index" view
+                    return RedirectToAction(nameof(HostsController.Addresses), "Hosts");
+                }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            }
         }
 
         public IActionResult Error()

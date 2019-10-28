@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dios.Models
 {
     public class Address
     {
-        [Key]
         public int ID { get; set; }
 
         [Required]
@@ -21,5 +21,10 @@ namespace Dios.Models
 
         [Required]
         public string Country { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, {1} - {2} {3} - {4}", Street, Number, ZipCode, Town, Country);
+        }
     }
 }

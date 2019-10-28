@@ -1,0 +1,78 @@
+﻿@model Dios.ViewModels.ParameterDetailsVM
+
+@{
+    ViewData["Title"] = "Flytta ut hyresgäst";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Vill du verkligen flytta ut denna hyresgäst?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PersonalNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.PersonalNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber2)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber2)
+        </dd>
+    </dl>
+
+    <h3>Från</h3>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Flat.Address)
+        </dt>
+        <dd>
+            @Model.Flat.Address.ToString()
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Flat.Number)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Flat.Number)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Flat.Floor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Flat.Floor)
+        </dd>
+    </dl>
+
+    <form asp-action="Remove" asp-route-flatId="@Model.Flat.ID" asp-route-id="@Model.User.Id">
+        <input type="submit" value="Ta bort" class="btn btn-info" /> |
+        <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.User.Id">Tillbaka</a>
+    </form>
+</div>

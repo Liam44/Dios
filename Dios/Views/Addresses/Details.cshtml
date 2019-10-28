@@ -1,0 +1,146 @@
+﻿@using Dios.ViewModels;
+
+@model AddressDetailsVM
+
+@{
+    ViewData["Title"] = "Byggnad - Detaljer";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Street)</th>
+                <th>@Html.DisplayNameFor(model => model.Number)</th>
+                <th>@Html.DisplayNameFor(model => model.ZipCode)</th>
+                <th>@Html.DisplayNameFor(model => model.Town)</th>
+                <th>@Html.DisplayNameFor(model => model.Country)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayFor(model => model.Street)</td>
+                <td>@Html.DisplayFor(model => model.Number)</td>
+                <td>@Html.DisplayFor(model => model.ZipCode)</td>
+                <td>@Html.DisplayFor(model => model.Town)</td>
+                <td>@Html.DisplayFor(model => model.Country)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+    <h4>Hyresansvarigar</h4>
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Hosts.First().LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.Hosts.First().FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model.Hosts.First().Email)</th>
+                <th>@Html.DisplayNameFor(model => model.Hosts.First().PhoneNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.Hosts.First().PhoneNumber2)</th>
+                @if (Model.CanDataBeDeleted)
+                {
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (UserDetailsVM host in Model.Hosts)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => host.LastName)</td>
+                    <td>@Html.DisplayFor(model => host.FirstName)</td>
+                    <td>@Html.DisplayFor(model => host.Email)</td>
+                    <td>@Html.DisplayFor(model => host.PhoneNumber)</td>
+                    <td>@Html.DisplayFor(model => host.PhoneNumber2)</td>
+                    @if (Model.CanDataBeDeleted)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-controller="Hosts" asp-route-id="@host.Id">Redigera</a>
+                            <span>|</span>
+                            <a asp-action="Details" asp-controller="Hosts" asp-route-id="@host.Id">Detaljer</a>
+                            <span>|</span>
+                            <a asp-action="Remove" asp-controller="Hosts" asp-route-id="@host.Id" asp-route-addressId="@Model.ID">Ta bort</a>
+                            <span>|</span>
+                            <a asp-action="Delete" asp-controller="Hosts" asp-route-id="@host.Id">Radera</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    <h4>Lägenheter</h4>
+    <hr />
+    @foreach (var item in Model.Flats)
+    {
+        <h5 style="text-decoration-line: underline;">Våning @item.Key</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => item.Value.First().EntryDoorCode)</th>
+                    <th>@Html.DisplayNameFor(model => item.Value.First().Number)</th>
+                    <th>Boende</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var flat in item.Value)
+                {
+                    string boende = string.Empty;
+
+                    foreach (ParameterDetailsVM parameter in flat.Parameters)
+                    {
+                        if (boende.Length > 0)
+                        {
+                            boende += "<br />";
+                        }
+
+                        boende += "<a href=\"/Users/Details/" + parameter.User.Id + "\">" + parameter.User.ToString() + "<a />";
+                    }
+
+                    <tr>
+                        <td>@Html.DisplayFor(model => flat.EntryDoorCode)</td>
+                        <td>@Html.DisplayFor(model => flat.Number)</td>
+                        <td>@Html.Raw(boende)</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Flats" asp-route-id="@flat.ID">Redigera</a> |
+                            <a asp-action="Details" asp-controller="Flats" asp-route-id="@flat.ID">Detaljer</a>
+                            @if (Model.CanDataBeDeleted)
+                            {
+                                <span>|</span>
+                                <a asp-action="Delete" asp-controller="Flats" asp-route-id="@flat.ID">Radera</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <hr />
+    }
+</div>
+<div>
+    <form asp-controller="Addresses" asp-action="ExportUsers" asp-route-id="@Model.ID" method="get" enctype="multipart/form-data">
+        <button class="btn btn-default" type="submit" style="margin-bottom: 10px">Exportera boendeslistorna</button>
+    </form>
+
+    @if (Model.CanDataBeDeleted)
+    {
+        <a class="btn btn-default" asp-action="Edit" asp-route-id="@Model.ID">Redigera</a>
+        <span>|</span>
+        <a class="btn btn-info" asp-action="Create" asp-controller="Flats" asp-route-addressId="@Model.ID">Skapa en ny lägenhet</a>
+        <span>|</span>
+        <a asp-action="Index">Tillbaka</a>
+    }
+    else
+    {
+        <a asp-action="Addresses" asp-controller="Hosts">Tillbaka</a>
+    }
+</div>

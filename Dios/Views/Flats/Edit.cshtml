@@ -1,0 +1,83 @@
+﻿@model Dios.Models.FlatDTO
+
+@{
+    ViewData["Title"] = "Redigera en lägenhet";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="~/app/modules/modules.js"></script>
+
+<script src="~/app/factories/Flats.js"></script>
+<script src="~/app/controllers/FlatsController.js"></script>
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+<div class="row" ng-app="flats" ng-controller="FlatsCtrl" ng-init="loadModel(@Model.ID)">
+    <div class="col-md-4">
+        <div class="alert alert-success alert-dismissible" role="alert" ng-show="success">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="dismissMessage()"><span aria-hidden="true">&times;</span></button>
+            {{success}}
+        </div>
+
+        <div class="form-group">
+            <h4>{{address}}</h4>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Portkodstavla</label>
+            <input class="form-control" ng-model="entryDoorCode" ng-disabled="!canDataBeEdited" autofocus />
+            <span class="text-danger field-validation-error" data-valmsg-for="EntryDoorCode" data-valmsg-replace="true">{{errors['EntryDoorCode']}}</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Våning</label>
+            <input class="form-control" value="1" min="-5" max="200" ng-model="floor" ng-disabled="!canDataBeEdited" />
+            <span class="text-danger field-validation-error" data-valmsg-for="Floor" data-valmsg-replace="true">{{errors['Floor']}}</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Nummer</label>
+            <input class="form-control" ng-model="number" ng-disabled="!canDataBeEdited" />
+            <span class="text-danger field-validation-error" data-valmsg-for="Number" data-valmsg-replace="true">{{errors['Number']}}</span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Spara" class="btn btn-info" ng-click="sendData()" />
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="form-group col-md-5 col-sm-5">
+            <h6>Lägenhetens hyresgästar</h6>
+            <input type="text"
+                   id="filterUsers"
+                   name="filterUsers"
+                   placeholder="Filtrera lägenhetens hyresgästar"
+                   class="form-control search"
+                   size="50" />
+            <select id="users" multiple="multiple" class="listbox form-control"></select>
+        </div>
+        <div class="col-md-2 col-sm-2">
+            <button ng-click="setUsers()" style="margin: 80px auto 10px auto; width: 100%"><b>&larr;</b></button>
+            <button ng-click="setAvailableUsers()" style="margin-left: auto; margin-right: auto; width: 100%"><b>&rarr;</b></button>
+        </div>
+        <div class="form-group col-md-5 col-sm-5">
+            <h6>Lediga hyresgästar</h6>
+            <input type="text"
+                   id="filterAvailableUsers"
+                   name="filterAvailableUsers"
+                   placeholder="Filtrera lediga hyresgästar"
+                   class="form-control search"
+                   size="50" />
+            <select id="available" multiple="multiple" class="listbox form-control"></select>
+        </div>
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-controller="Addresses" asp-route-id="@Model.AddressID">Tillbaka</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

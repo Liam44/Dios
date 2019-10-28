@@ -1,0 +1,9 @@
+﻿@model Dios.ViewModels.UsersViewModels.UserCreateVM
+
+@{
+    ViewData["Title"] = "Skapa en ny boende";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@await Html.PartialAsync("_UserCreate", Model)

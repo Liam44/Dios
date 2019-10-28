@@ -1,5 +1,3 @@
-using System;
-
 namespace Dios.Models
 {
     public class ErrorViewModel

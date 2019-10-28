@@ -1,0 +1,102 @@
+﻿@model Dios.ViewModels.UsersViewModels.UserCreateVM
+@{
+    ViewData["Title"] = "Redigera din profil";
+}
+
+@{
+    if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        var statusMessageClass = Model.StatusMessage.StartsWith("Error") ? "danger" : "success";
+        <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            @Model.StatusMessage
+        </div>
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            @Html.HiddenFor(model => model.Id)
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @{
+                bool disabled = !Model.CanChangeName;
+            }
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="PersonalNumber"></label>
+                    <input id="personalNumber" asp-for="PersonalNumber" class="form-control" autofocus />
+                    <input hidden asp-for="PersonalNumber" value="@Model.PersonalNumber" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input id="firstName" asp-for="FirstName" class="form-control" />
+                    <input hidden asp-for="FirstName" value="@Model.FirstName" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input id="lastName" asp-for="LastName" class="form-control" />
+                    <input hidden asp-for="LastName" value="@Model.LastName" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input id="email" asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                @if (Model.IsPhoneNumber2Visible)
+                {
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber2"></label>
+                        <input asp-for="PhoneNumber2" class="form-control" />
+                        <span asp-validation-for="PhoneNumber2" class="text-danger"></span>
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-info">Spara</button>
+
+                <div>
+                    @if (Model.CanChangePassword)
+                    {
+                        <a asp-action="ChangePassword" asp-controller="Manage">Byt lösenord</a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @if (Model.CanChangePassword)
+                        {
+                            <span> | </span>
+                        }
+                        <a asp-action="Index" asp-controller="Users">Tillbaka</a>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var disabled = '@(Model.CanChangeName)' == 'True';
+
+        disable(disabled);
+    });
+
+    function disable(disabled) {
+        document.getElementById('personalNumber').disabled = disabled;
+        document.getElementById('firstName').disabled = disabled;
+        document.getElementById('lastName').disabled = disabled;
+
+        if (disabled) {
+            document.getElementById('email').focus();
+        }
+    }
+</script>
