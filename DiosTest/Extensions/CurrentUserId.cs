@@ -15,17 +15,11 @@ namespace DiosTest.Extensions
 
             // Act
 
-            try
-            {
-                // Act
-                var result = user.Id();
-            }
-            catch (ArgumentNullException ex)
-            {
-                // Assert
-                Assert.NotNull(ex);
-                Assert.Contains(nameof(user), ex.Message);
-            }
+            // Act
+            Exception ex = Assert.Throws<ArgumentNullException>(() => user.Id());
+
+            // Assert
+            Assert.Contains(nameof(user), ex.Message);
         }
 
         [Fact]

@@ -55,9 +55,9 @@ namespace Dios.Helpers
                         File.Delete(fName);
                     }
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
-                    throw ex;
+                    throw;
                 }
             }
             else
@@ -74,7 +74,7 @@ namespace Dios.Helpers
             }
 
             // Then the 'A5' version
-            string usersA5 = Export.ExportUsersA5();
+            string usersA5 = ExportUsersA5();
 
             if (string.IsNullOrEmpty(usersA5))
             {
@@ -82,7 +82,7 @@ namespace Dios.Helpers
             }
 
             // And finally the list with entrydoor codes
-            string entryDoorCodes = Export.ExportUsersEntryDoorCodes();
+            string entryDoorCodes = ExportUsersEntryDoorCodes();
 
             if (string.IsNullOrEmpty(entryDoorCodes))
             {
@@ -464,7 +464,7 @@ namespace Dios.Helpers
 
         private static string ExportUsersA5()
         {
-            string fileName = Export.DocumentName(_address, ExportFormat.a5);
+            string fileName = DocumentName(_address, ExportFormat.a5);
             string filePath = Path.Combine(_path, fileName);
 
             // Create Document
@@ -817,5 +817,16 @@ namespace Dios.Helpers
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Class allowing the Export static class to be mocked while testing
+    /// </summary>
+    public class ExportWrapper : IExport
+    {
+        public ZipResult ExportUsers(IUsersRepository usersRepository, AddressDTO address, string path)
+        {
+            return ExportUsers(usersRepository, address, path);
+        }
     }
 }

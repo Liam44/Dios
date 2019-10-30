@@ -35,17 +35,17 @@ namespace Dios.Helpers
 
             return new ZipResult
             {
-                Name = fileName,
+                FileName = fileName,
                 MemoryStream = mem,
-                MIMEType = "application/zip"
+                ContentType = "application/zip"
             };
         }
     }
 
     public class ZipResult
     {
-        public string Name { get; set; }
+        public string FileName { get; set; }
         public MemoryStream MemoryStream { get; set; }
-        public string MIMEType { get; set; }
+        public string ContentType { get; set; }
     }
 }

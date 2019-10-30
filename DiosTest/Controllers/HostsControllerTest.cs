@@ -1,12 +1,10 @@
 ﻿using Dios.Controllers;
-using Dios.Helpers;
 using Dios.Models;
 using Dios.Repositories;
 using Dios.Services;
 using Dios.ViewModels;
 using Dios.ViewModels.UsersViewModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
@@ -1963,18 +1961,11 @@ namespace DiosTest.Controllers
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                             .Returns<User>(null);
 
-            try
-            {
-                // Act
-                var result = _controller.Edit(id);
-            }
-            catch (ApplicationException ex)
-            {
-                // Assert
-                Assert.NotNull(ex);
+            // Act
+            Exception ex = Assert.Throws<ApplicationException>(() => _controller.Edit(id));
 
-                _usersRepository.Verify(u => u.User(userId), Times.Once);
-            }
+            // Assert
+            _usersRepository.Verify(u => u.User(userId), Times.Once);
         }
 
         [Fact]
@@ -1987,18 +1978,11 @@ namespace DiosTest.Controllers
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                             .Returns(user);
 
-            try
-            {
-                // Act
-                var result = _controller.Edit(userId);
-            }
-            catch (ApplicationException ex)
-            {
-                // Assert
-                Assert.NotNull(ex);
+            // Act
+            Exception ex = Assert.Throws<ApplicationException>(() => _controller.Edit(userId));
 
-                _usersRepository.Verify(u => u.User(userId), Times.Once);
-            }
+            // Assert
+            _usersRepository.Verify(u => u.User(userId), Times.Once);
         }
 
         [Fact]
@@ -2170,18 +2154,11 @@ namespace DiosTest.Controllers
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns<User>(null);
 
-            try
-            {
-                // Act
-                var result = await _controller.Edit(user);
-            }
-            catch (ApplicationException ex)
-            {
-                // Assert
-                Assert.NotNull(ex);
+            // Act
+            Exception ex = await Assert.ThrowsAsync<ApplicationException>(() => _controller.Edit(user));
 
-                _usersRepository.Verify(u => u.User(userId), Times.Once);
-            }
+            // Assert
+            _usersRepository.Verify(u => u.User(userId), Times.Once);
         }
 
         [Fact]

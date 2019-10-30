@@ -23,6 +23,7 @@ namespace Dios.Controllers
         private readonly IUsersRepository _usersRepository;
         private readonly IAddressHostsRepository _addressHostsRepository;
         private readonly IHostingEnvironment _environment;
+        private readonly IExport _export;
 
         private string RootPath
         {
@@ -35,7 +36,8 @@ namespace Dios.Controllers
                                    IParametersRepository parameterRepository,
                                    IUsersRepository usersRepository,
                                    IAddressHostsRepository addressHostsRepository,
-                                   IHostingEnvironment environment)
+                                   IHostingEnvironment environment,
+                                   IExport export)
         {
             _addressesRepository = addressesRepository;
             _flatsRepository = flatsRepository;
@@ -43,6 +45,7 @@ namespace Dios.Controllers
             _usersRepository = usersRepository;
             _addressHostsRepository = addressHostsRepository;
             _environment = environment;
+            _export = export;
         }
 
         // GET: Addresses
@@ -174,24 +177,24 @@ namespace Dios.Controllers
 
             string path = Path.Combine(RootPath, address.ID.ToString());
 
-            // Export all users in different formats and prepare all generetade files to be downloaded
+            // Export users lists in different formats and prepare all generated files to be downloaded
             try
             {
-                ZipResult zipResult = Export.ExportUsers(_usersRepository, address, path);
+                ZipResult zipResult = _export.ExportUsers(_usersRepository, address, path);
 
-                if (zipResult == null)
+                if (zipResult == null || string.IsNullOrEmpty(zipResult.FileName))
                 {
                     // Something went wrong: redirect to the details view
                     return RedirectToAction(nameof(Details), new { id });
                 }
 
-                return File(zipResult.MemoryStream, zipResult.MIMEType, zipResult.Name);
+                return File(zipResult.MemoryStream, zipResult.ContentType, zipResult.FileName);
             }
             catch (IOException)
             {
                 return RedirectToAction(nameof(Index));
             }
-            catch (ExportUsersException)
+            catch (Exception ex) when (ex is ExportUsersException || ex is FormatException)
             {
                 // Something went wrong: redirect to the details view
                 return RedirectToAction(nameof(Details), new { id });

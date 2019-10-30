@@ -537,7 +537,8 @@ namespace DiosTest.Controllers
         #region ForgotPasswordConfirmation
 
         [Fact]
-        public void ForgotPasswordConfirmation() {
+        public void ForgotPasswordConfirmation()
+        {
             // Arrange
 
             // Act
@@ -731,20 +732,11 @@ namespace DiosTest.Controllers
             requestUserProviderMock.Setup(r => r.GetUserAsync())
                                    .Returns(Task.FromResult(user));
 
-            try
-            {
-                // Act
-                Exception ex = await Assert.ThrowsAsync<ApplicationException>(() => controller.ChangePassword());
-            }
-            catch (ApplicationException ex)
-            {
-                // Assert
-                Assert.NotNull(ex);
-            }
-            finally
-            {
-                requestUserProviderMock.Verify(r => r.GetUserAsync(), Times.Once);
-            }
+            // Act
+            Exception ex = await Assert.ThrowsAsync<ApplicationException>(() => controller.ChangePassword());
+
+            // Assert
+            requestUserProviderMock.Verify(r => r.GetUserAsync(), Times.Once);
         }
 
         [Fact]
@@ -819,20 +811,11 @@ namespace DiosTest.Controllers
             requestUserProviderMock.Setup(r => r.GetUserAsync())
                                    .Returns(Task.FromResult(user));
 
-            try
-            {
-                // Act
-                Exception ex = await Assert.ThrowsAsync<ApplicationException>(() => controller.ChangePassword(inputModel));
-            }
-            catch (ApplicationException ex)
-            {
-                // Assert
-                Assert.NotNull(ex);
-            }
-            finally
-            {
-                requestUserProviderMock.Verify(r => r.GetUserAsync(), Times.Once);
-            }
+            // Act
+            Exception ex = await Assert.ThrowsAsync<ApplicationException>(() => controller.ChangePassword(inputModel));
+
+            // Assert
+            requestUserProviderMock.Verify(r => r.GetUserAsync(), Times.Once);
         }
 
         [Fact]
