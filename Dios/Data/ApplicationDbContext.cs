@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dios.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public sealed class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

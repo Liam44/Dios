@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dios.ViewModels
 {
-    public class ParameterDetailsVM
+    public sealed class ParameterDetailsVM
     {
         public UserDetailsVM User { get; set; }
         public FlatDetailsVM Flat { get; set; }

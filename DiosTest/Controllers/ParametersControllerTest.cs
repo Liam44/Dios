@@ -10,7 +10,7 @@ using Xunit;
 
 namespace DiosTest.Controllers
 {
-    public class ParametersControllerTest
+    public sealed class ParametersControllerTest
     {
         private readonly Mock<IParametersRepository> _parametersRepository;
         private readonly Mock<IFlatsRepository> _flatsRepository;

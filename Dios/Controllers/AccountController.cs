@@ -1,4 +1,5 @@
-﻿using Dios.Models;
+﻿using Dios.Extensions;
+using Dios.Models;
 using Dios.Repositories;
 using Dios.Services;
 using Dios.ViewModels.AccountViewModels;
@@ -13,7 +14,7 @@ namespace Dios.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
-    public class AccountController : Controller
+    public sealed class AccountController : Controller
     {
         private readonly IRequestUserProvider _requestUserProvider;
         private readonly IRequestSignInProvider _requestSignInProvider;

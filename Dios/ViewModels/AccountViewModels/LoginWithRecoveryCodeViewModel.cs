@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dios.ViewModels.AccountViewModels
 {
-    public class LoginWithRecoveryCodeViewModel
+    public sealed class LoginWithRecoveryCodeViewModel
     {
             [Required]
             [DataType(DataType.Text)]

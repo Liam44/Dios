@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Dios.Services
 {
-    public class RequestSignInProvider : IRequestSignInProvider
+    public sealed class RequestSignInProvider : IRequestSignInProvider
     {
         private readonly SignInManager<User> _signInManager;
 

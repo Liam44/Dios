@@ -1,6 +1,6 @@
 ﻿namespace Dios.Models
 {
-    public class Parameter
+    public sealed class Parameter
     {
         public string UserId { get; set; }
 

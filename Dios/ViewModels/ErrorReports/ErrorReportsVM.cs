@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Dios.ViewModels.ErrorReports
 {
-    public class ErrorReportsVM
+    public sealed class ErrorReportsVM
     {
         public int FlatId { get; set; }
         public string Flat { get; set; }

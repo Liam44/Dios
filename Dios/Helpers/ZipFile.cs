@@ -1,17 +1,28 @@
-﻿using Dios.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Dios.Helpers
 {
     public static class ZipFile
     {
-        public static ZipResult CreateZip(string fileName, string path, List<string> files)
+        public static ZipResult CreateZip(string path, string fileName, List<string> files)
         {
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(fileName))
+            {
+                return new ZipResult();
+            }
+
+            if (string.Compare(fileName.Substring(fileName.Length - 4), ".zip", true) != 0)
+            {
+                fileName += ".zip";
+            }
+
+            if (files == null)
+            {
+                files = new List<string>();
+            }
+
             string zipFilePath = Path.Combine(path, fileName);
             using (FileStream zipToCreate = new FileStream(zipFilePath, FileMode.Create))
             {
@@ -33,19 +44,51 @@ namespace Dios.Helpers
 
             mem.Position = 0;
 
-            return new ZipResult
-            {
-                FileName = fileName,
-                MemoryStream = mem,
-                ContentType = "application/zip"
-            };
+            return new ZipResult(fileName, mem);
         }
     }
 
-    public class ZipResult
+    public sealed class ZipResult
     {
-        public string FileName { get; set; }
-        public MemoryStream MemoryStream { get; set; }
-        public string ContentType { get; set; }
+        public string FileName { get; private set; }
+        public MemoryStream MemoryStream { get; private set; }
+        public string ContentType
+        {
+            get
+            {
+                return "application/zip";
+            }
+            private set { }
+        }
+
+        public ZipResult()
+        {
+            FileName = string.Empty;
+            MemoryStream = new MemoryStream();
+        }
+
+        public ZipResult(string fileName, MemoryStream memoryStream)
+        {
+            FileName = fileName;
+            if (memoryStream == null)
+            {
+                MemoryStream = new MemoryStream();
+            }
+            else
+            {
+                MemoryStream = memoryStream;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Class allowing the ZipFile static class to be mocked while testing
+    /// </summary>
+    public sealed class ZipFileWrapper : IZipFile
+    {
+        public ZipResult CreateZip(string fileName, string path, List<string> files)
+        {
+            return ZipFile.CreateZip(fileName, path, files);
+        }
     }
 }

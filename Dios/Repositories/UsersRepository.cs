@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Dios.Repositories
 {
-    public class UsersRepository : IUsersRepository
+    public sealed class UsersRepository : IUsersRepository
     {
         private const string NUMBERS = "1234567890";
         private const string TOKENS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

@@ -1,11 +1,21 @@
-﻿using Dios.Models;
+﻿using Dios.Exceptions;
+using Dios.Models;
 using System.Collections.Generic;
 
 namespace Dios.Extensions
 {
-    static public class NavigationProperties
+    public interface INavigationPropertiesWrapper
     {
-        public static void Include(this FlatDTO flat, List<ParameterDTO> parameters = null, AddressDTO address = null)
+        void Include(FlatDTO flat, List<ParameterDTO> parameters = null, AddressDTO address = null);
+
+        void Include(AddressDTO address, List<FlatDTO> flats, List<UserDTO> hosts = null);
+
+        void Include(UserDTO user, List<ParameterDTO> parameters = null, List<AddressDTO> addresses = null);
+    }
+
+    public class NavigationPropertiesWrapper : INavigationPropertiesWrapper
+    {
+        public void Include(FlatDTO flat, List<ParameterDTO> parameters = null, AddressDTO address = null)
         {
             if (address == null)
             {
@@ -26,16 +36,51 @@ namespace Dios.Extensions
             }
         }
 
-        public static void Include(this AddressDTO address, List<FlatDTO> flats, List<UserDTO> hosts = null)
+        public void Include(AddressDTO address, List<FlatDTO> flats, List<UserDTO> hosts = null)
         {
             address.Flats = flats;
             address.Hosts = hosts;
         }
 
-        public static void Include(this UserDTO user, List<ParameterDTO> parameters = null, List<AddressDTO> addresses = null)
+        public void Include(UserDTO user, List<ParameterDTO> parameters = null, List<AddressDTO> addresses = null)
         {
             user.Parameters = parameters;
             user.Addresses = addresses;
+        }
+    }
+
+    public static class NavigationProperties
+    {
+        public static INavigationPropertiesWrapper NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
+        public static void Include(this FlatDTO flat, List<ParameterDTO> parameters = null, AddressDTO address = null)
+        {
+            if (NavigationPropertiesWrapper == null)
+            {
+                throw new NavigationPropertiesWrapperUndefinedException();
+            }
+
+            NavigationPropertiesWrapper.Include(flat, parameters, address);
+        }
+
+        public static void Include(this AddressDTO address, List<FlatDTO> flats, List<UserDTO> hosts = null)
+        {
+            if (NavigationPropertiesWrapper == null)
+            {
+                throw new NavigationPropertiesWrapperUndefinedException();
+            }
+
+            NavigationPropertiesWrapper.Include(address, flats, hosts);
+        }
+
+        public static void Include(this UserDTO user, List<ParameterDTO> parameters = null, List<AddressDTO> addresses = null)
+        {
+            if (NavigationPropertiesWrapper == null)
+            {
+                throw new NavigationPropertiesWrapperUndefinedException();
+            }
+
+            NavigationPropertiesWrapper.Include(user, parameters, addresses);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dios.Services
 {
-    public class RequestUserProvider : IRequestUserProvider
+    public sealed class RequestUserProvider : IRequestUserProvider
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly UserManager<User> _userManager;

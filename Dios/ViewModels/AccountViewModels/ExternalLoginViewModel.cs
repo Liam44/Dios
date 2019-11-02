@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dios.ViewModels.AccountViewModels
 {
-    public class ExternalLoginViewModel
+    public sealed class ExternalLoginViewModel
     {
         [Required]
         [EmailAddress]

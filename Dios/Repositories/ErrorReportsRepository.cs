@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dios.Repositories
 {
-    public class ErrorReportsRepository : IErrorReportsRepository
+    public sealed class ErrorReportsRepository : IErrorReportsRepository
     {
         private readonly ApplicationDbContext _context;
 

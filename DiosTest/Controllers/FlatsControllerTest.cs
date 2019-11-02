@@ -15,7 +15,7 @@ using System.Security.Claims;
 using Xunit;
 namespace DiosTest.Controllers
 {
-    public class FlatsControllerTest
+    public sealed class FlatsControllerTest
     {
         private Mock<IFlatsRepository> _flatsRepositoryMock;
         private Mock<IAddressesRepository> _addressesRepositoryMock;

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dios.Models
 {
-    public class ErrorReportDTO
+    public sealed class ErrorReportDTO
     {
         public int Id { get; set; } = -1;
 

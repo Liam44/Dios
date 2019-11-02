@@ -2,7 +2,7 @@
 
 namespace Dios.ViewModels.AccountViewModels
 {
-    public class RegisterViewModel
+    public sealed class RegisterViewModel
     {
         public string RegistrationCode { get; set; }
 

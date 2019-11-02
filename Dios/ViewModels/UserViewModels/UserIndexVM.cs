@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dios.ViewModels
 {
-    public class UserIndexVM
+    public sealed class UserIndexVM
     {
         public string Id { get; set; }
 

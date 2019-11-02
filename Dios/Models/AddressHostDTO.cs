@@ -1,6 +1,6 @@
 ﻿namespace Dios.Models
 {
-    public class AddressHostDTO
+    public sealed class AddressHostDTO
     {
         public AddressDTO Address { get; set; } = new AddressDTO();
         public UserDTO Host { get; set; } = new UserDTO();

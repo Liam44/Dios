@@ -15,7 +15,7 @@ using System.Linq;
 namespace Dios.Controllers
 {
     [Authorize(Roles = "Admin,Host")]
-    public class AddressesController : Controller
+    public sealed class AddressesController : Controller
     {
         private readonly IAddressesRepository _addressesRepository;
         private readonly IFlatsRepository _flatsRepository;
@@ -24,6 +24,7 @@ namespace Dios.Controllers
         private readonly IAddressHostsRepository _addressHostsRepository;
         private readonly IHostingEnvironment _environment;
         private readonly IExport _export;
+        private readonly IZipFile _zipFile;
 
         private string RootPath
         {
@@ -37,7 +38,8 @@ namespace Dios.Controllers
                                    IUsersRepository usersRepository,
                                    IAddressHostsRepository addressHostsRepository,
                                    IHostingEnvironment environment,
-                                   IExport export)
+                                   IExport export,
+                                   IZipFile zipFile)
         {
             _addressesRepository = addressesRepository;
             _flatsRepository = flatsRepository;
@@ -46,6 +48,7 @@ namespace Dios.Controllers
             _addressHostsRepository = addressHostsRepository;
             _environment = environment;
             _export = export;
+            _zipFile = zipFile;
         }
 
         // GET: Addresses
@@ -180,7 +183,7 @@ namespace Dios.Controllers
             // Export users lists in different formats and prepare all generated files to be downloaded
             try
             {
-                ZipResult zipResult = _export.ExportUsers(_usersRepository, address, path);
+                ZipResult zipResult = _export.ExportUsers(_zipFile, _usersRepository, address, path);
 
                 if (zipResult == null || string.IsNullOrEmpty(zipResult.FileName))
                 {

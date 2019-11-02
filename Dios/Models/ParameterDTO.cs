@@ -1,6 +1,6 @@
 ﻿namespace Dios.Models
 {
-    public class ParameterDTO
+    public sealed class ParameterDTO
     {
         public string UserId { get; set; } = string.Empty;
         public UserDTO User { get; set; } = new UserDTO();

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Dios.Controllers
 {
     [Authorize(Roles = "User,Admin")]
-    public class UsersController : Controller
+    public sealed class UsersController : Controller
     {
         private const string ROLE = "User";
 

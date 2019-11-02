@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Dios.Controllers
 {
-    public class FlatsController : Controller
+    public sealed class FlatsController : Controller
     {
         private readonly IFlatsRepository _flatsRepository;
         private readonly IAddressesRepository _addressesRepository;

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dios.Repositories
 {
-    public class ParametersRepository : IParametersRepository
+    public sealed class ParametersRepository : IParametersRepository
     {
         private readonly ApplicationDbContext _context;
 

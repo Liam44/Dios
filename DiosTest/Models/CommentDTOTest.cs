@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DiosTest.Models
 {
-    public class CommentDTOTest
+    public sealed class CommentDTOTest
     {
         [Fact]
         public void CommentDTO_Null()

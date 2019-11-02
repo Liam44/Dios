@@ -2,7 +2,7 @@
 
 namespace Dios.ViewModels
 {
-    public class ParameterEditVM
+    public sealed class ParameterEditVM
     {
         public string UserId { get; set; }
         public UserDetailsVM User { get; set; }

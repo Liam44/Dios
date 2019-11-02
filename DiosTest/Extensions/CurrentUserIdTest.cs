@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DiosTest.Extensions
 {
-    public class CurrentUserId
+    public sealed class CurrentUserIdTest
     {
         [Fact]
         public void Id_Null()

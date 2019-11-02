@@ -3,7 +3,7 @@ using System;
 
 namespace Dios.Services
 {
-    public class Log<T> : ILog<T>
+    public sealed class Log<T> : ILog<T>
     {
         private readonly ILogger<T> logger;
 

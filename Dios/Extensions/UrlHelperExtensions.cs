@@ -1,19 +1,26 @@
 using Dios.Controllers;
+using Dios.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace Microsoft.AspNetCore.Mvc
+namespace Dios.Extensions
 {
-    public static class UrlHelperExtensions
+    public interface IUrlHelperWrapper
     {
-        public static string ResetPasswordCallbackLink(this IUrlHelper urlHelper, string userId, string code, string scheme)
+        string ResetPasswordCallbackLink(IUrlHelper urlHelper, string userId, string code, string scheme);
+        string GenerateRegistrationLink(IUrlHelper urlHelper, string code, string scheme);
+    }
+
+    public class UrlHelperWrapper : IUrlHelperWrapper
+    {
+        public string ResetPasswordCallbackLink(IUrlHelper urlHelper, string userId, string code, string scheme)
         {
             try
             {
-                return urlHelper.Action(
-                    action: nameof(AccountController.ResetPassword),
-                    controller: "Account",
-                    values: new { userId, code },
-                    protocol: scheme);
+                return urlHelper.Action(action: nameof(AccountController.ResetPassword),
+                                        controller: "Account",
+                                        values: new { userId, code },
+                                        protocol: scheme);
             }
             catch (Exception ex)
             {
@@ -21,13 +28,37 @@ namespace Microsoft.AspNetCore.Mvc
             }
         }
 
+        public string GenerateRegistrationLink(IUrlHelper urlHelper, string code, string scheme)
+        {
+            return urlHelper.Action(action: nameof(AccountController.Register),
+                                    controller: "Account",
+                                    values: new { code },
+                                    protocol: scheme);
+        }
+    }
+
+    public static class UrlHelperExtensions
+    {
+        public static IUrlHelperWrapper UrlHelperWrapper = new UrlHelperWrapper();
+
+        public static string ResetPasswordCallbackLink(this IUrlHelper urlHelper, string userId, string code, string scheme)
+        {
+            if (UrlHelperWrapper == null)
+            {
+                throw new UrlHelperWrapperUndefinedException();
+            }
+
+            return UrlHelperWrapper.ResetPasswordCallbackLink(urlHelper, userId, code, scheme);
+        }
+
         public static string GenerateRegistrationLink(this IUrlHelper urlHelper, string code, string scheme)
         {
-            return urlHelper.Action(
-                action: nameof(AccountController.Register),
-                controller: "Account",
-                values: new { code },
-                protocol: scheme);
+            if (UrlHelperWrapper == null)
+            {
+                throw new UrlHelperWrapperUndefinedException();
+            }
+
+            return UrlHelperWrapper.GenerateRegistrationLink(urlHelper, code, scheme);
         }
     }
 }

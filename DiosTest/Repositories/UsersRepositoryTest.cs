@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DiosTest.Repositories
 {
-    public class UsersRepositoryTest : IDisposable
+    public sealed class UsersRepositoryTest : IDisposable
     {
         private readonly DbContextOptions<ApplicationDbContext> _options;
         private readonly ApplicationDbContext _dbContext;

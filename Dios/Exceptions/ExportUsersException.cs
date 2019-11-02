@@ -2,7 +2,7 @@
 
 namespace Dios.Exceptions
 {
-    public class ExportUsersException: Exception
+    public sealed class ExportUsersException: Exception
     {
     }
 }

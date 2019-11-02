@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dios.Services
 {
-    public class NewUser : INewUser
+    public sealed class NewUser : INewUser
     {
         public async Task<Dictionary<string, string>> Create(UserCreateVM user,
                                                              string role,

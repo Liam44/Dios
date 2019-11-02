@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dios.Repositories
 {
-    public class AddressHostsRepository : IAddressHostsRepository
+    public sealed class AddressHostsRepository : IAddressHostsRepository
     {
         private readonly ApplicationDbContext _context;
 

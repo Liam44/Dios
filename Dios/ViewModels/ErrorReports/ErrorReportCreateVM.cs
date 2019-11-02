@@ -2,7 +2,7 @@
 
 namespace Dios.ViewModels.ErrorReports
 {
-    public class ErrorReportCreateVM
+    public sealed class ErrorReportCreateVM
     {
         public int FlatId { get; set; }
         public string Flat { get; set; }

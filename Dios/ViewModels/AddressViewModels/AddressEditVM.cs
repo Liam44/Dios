@@ -1,6 +1,6 @@
 ﻿namespace Dios.ViewModels
 {
-    public class AddressEditVM
+    public sealed class AddressEditVM
     {
         public int ID { get; set; }
         public AddressCreateVM Address { get; set; }

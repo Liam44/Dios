@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dios.Models
 {
-    public class Comment
+    public sealed class Comment
     {
         public int Id { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Dios.ViewModels.AccountViewModels
 {
-    public class LoginViewModel
+    public sealed class LoginViewModel
     {
         [Required]
         [EmailAddress]

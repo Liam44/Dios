@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DiosTest.Models
 {
-    public class ErrorReportDTOTest
+    public sealed class ErrorReportDTOTest
     {
         [Fact]
         public void ErrorReportDTO_NoParameter()

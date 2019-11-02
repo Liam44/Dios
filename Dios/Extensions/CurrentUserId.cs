@@ -3,14 +3,14 @@ using System.Security.Claims;
 
 namespace Dios.Extensions
 {
-    public static class CurrentUserId
+    public interface ICurrentUserIdWrapper
     {
-        /// <summary>
-        /// Returns the user's Id
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public static string Id(this ClaimsPrincipal user)
+        string Id(ClaimsPrincipal user);
+    }
+
+    public class CurrentUserIdWrapper : ICurrentUserIdWrapper
+    {
+        public string Id(ClaimsPrincipal user)
         {
             if (user == null)
             {
@@ -18,6 +18,21 @@ namespace Dios.Extensions
             }
 
             return user.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+    }
+
+    public static class CurrentUserId
+    {
+        public static ICurrentUserIdWrapper CurrentUserIdWrapper = new CurrentUserIdWrapper();
+
+        /// <summary>
+        /// Returns the user's Id
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static string Id(this ClaimsPrincipal user)
+        {
+            return CurrentUserIdWrapper.Id(user);
         }
     }
 }

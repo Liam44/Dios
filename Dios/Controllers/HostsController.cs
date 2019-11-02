@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Dios.Controllers
 {
     [Authorize(Roles = "Host,Admin")]
-    public class HostsController : Controller
+    public sealed class HostsController : Controller
     {
         private const string ROLE = "Host";
 
@@ -513,7 +513,7 @@ namespace Dios.Controllers
 
         #region Private classes
 
-        public class ErrorReportAPI
+        public sealed class ErrorReportAPI
         {
             public int AddressId { get; set; }
             public string Address { get; set; }

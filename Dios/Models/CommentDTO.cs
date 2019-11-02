@@ -2,7 +2,7 @@
 
 namespace Dios.Models
 {
-    public class CommentDTO
+    public sealed class CommentDTO
     {
         public int Id { get; set; } = -1;
 

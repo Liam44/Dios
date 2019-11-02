@@ -45,6 +45,9 @@ namespace Dios
             services.AddScoped<INewUser, NewUser>();
             services.AddScoped<ILog<AccountController>, Log<AccountController>>();
 
+            services.AddScoped<IExport, ExportWrapper>();
+            services.AddScoped<IZipFile, ZipFileWrapper>();
+
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             // Add application services.

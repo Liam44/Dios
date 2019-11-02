@@ -5,6 +5,6 @@ namespace Dios.Helpers
 {
     public interface IExport
     {
-        ZipResult ExportUsers(IUsersRepository usersRepository, AddressDTO address, string path);
+        ZipResult ExportUsers(IZipFile zipFile, IUsersRepository usersRepository, AddressDTO address, string path);
     }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Dios.Models
 {
     // Add profile data for application users by adding properties to the User class
-    public class User : IdentityUser
+    public sealed class User : IdentityUser
     {
         [Required]
         public string PersonalNumber { get; set; }

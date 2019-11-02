@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dios.ViewModels
 {
-    public class FlatCreateVM
+    public sealed class FlatCreateVM
     {
         public int ID { get; set; }
 

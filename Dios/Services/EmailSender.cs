@@ -10,7 +10,7 @@ namespace Dios.Services
 {
     // This class is used by the application to send email for account confirmation and password reset.
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
-    public class EmailSender : IEmailSender
+    public sealed class EmailSender : IEmailSender
     {
         public EmailSettings EmailSettings { get; set; }
 
@@ -35,7 +35,7 @@ namespace Dios.Services
 
                 MailMessage mail = new MailMessage()
                 {
-                    From = new MailAddress(EmailSettings.NetworkCredentials.UserName, "ÅreBiz App")
+                    From = new MailAddress(EmailSettings.NetworkCredentials.UserName, "Diös")
                 };
 
                 mail.To.Add(new MailAddress(email));

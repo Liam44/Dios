@@ -35,11 +35,19 @@ namespace Dios.Helpers
         private const string MEDIUMFONTSIZE_ENTRYDOORCODES = "52";
         private const string SMALLFONTSIZE_ENTRYDOORCODES = "40";
 
+        private const int MARGIN_TOP = 1008;
+        private const uint MARGIN_RIGHT = 1008;
+        private const int MARGIN_BOTTOM = 1008;
+        private const uint MARGIN_LEFT = 1008;
+        private const uint MARGIN_HEADER = 720;
+        private const uint MARGIN_FOOTER = 720;
+        private const uint MARGIN_GUTTER = 0;
+
         private static IUsersRepository _usersRepository { get; set; }
         private static AddressDTO _address { get; set; }
         private static string _path { get; set; }
 
-        public static ZipResult ExportUsers(IUsersRepository usersRepository, AddressDTO address, string path)
+        public static ZipResult ExportUsers(IZipFile zipFile, IUsersRepository usersRepository, AddressDTO address, string path)
         {
             _usersRepository = usersRepository;
             _address = address;
@@ -89,9 +97,9 @@ namespace Dios.Helpers
                 throw new ExportUsersException();
             }
 
-            return ZipFile.CreateZip(DocumentName(address, ExportFormat.undefined, ".zip"),
-                                     path,
-                                     new List<string> { allUsers, usersA5, entryDoorCodes });
+            return zipFile?.CreateZip(path,
+                                      DocumentName(_address, ExportFormat.undefined, ".zip"),
+                                      new List<string> { allUsers, usersA5, entryDoorCodes });
         }
 
         private static string DocumentName(AddressDTO address, ExportFormat exportFormat, string extention = ".docx")
@@ -101,15 +109,15 @@ namespace Dios.Helpers
                 return string.Empty;
             }
 
-            string fileName = address.Street + address.Number;
+            string fileName = string.Format("{0} {1}", address.Street, address.Number);
 
             switch (exportFormat)
             {
                 case ExportFormat.a5:
-                    fileName += "A5";
+                    fileName += " - A5";
                     break;
                 case ExportFormat.entryDoorCodes:
-                    fileName += "Portkodstavla";
+                    fileName += " - Portkodstavla";
                     break;
                 default:
                     break;
@@ -294,17 +302,7 @@ namespace Dios.Helpers
 
                 // Set the margins in the page
                 SectionProperties sectionProps = new SectionProperties();
-                PageMargin pageMargin = new PageMargin()
-                {
-                    Top = 1008,
-                    Right = 1008U,
-                    Bottom = 1008,
-                    Left = 1008U,
-                    Header = 720U,
-                    Footer = 720U,
-                    Gutter = 0U
-                };
-                sectionProps.Append(pageMargin);
+                sectionProps.Append(new StandardPageMargin());
                 docBody.Append(sectionProps);
 
                 mainPart.Document.Body = docBody;
@@ -443,17 +441,7 @@ namespace Dios.Helpers
 
                 // Set the margins in the page
                 SectionProperties sectionProps = new SectionProperties();
-                PageMargin pageMargin = new PageMargin()
-                {
-                    Top = 1008,
-                    Right = 1008U,
-                    Bottom = 1008,
-                    Left = 1008U,
-                    Header = 720U,
-                    Footer = 720U,
-                    Gutter = 0U
-                };
-                sectionProps.Append(pageMargin);
+                sectionProps.Append(new StandardPageMargin());
                 docBody.Append(sectionProps);
 
                 mainPart.Document.Body = docBody;
@@ -610,17 +598,7 @@ namespace Dios.Helpers
                 };
                 sectionProps.Append(pageSize);
 
-                PageMargin pageMargin = new PageMargin()
-                {
-                    Top = 1008,
-                    Right = 1008U,
-                    Bottom = 1008,
-                    Left = 1008U,
-                    Header = 720U,
-                    Footer = 720U,
-                    Gutter = 0U
-                };
-                sectionProps.Append(pageMargin);
+                sectionProps.Append(new StandardPageMargin());
                 docBody.Append(sectionProps);
 
                 mainPart.Document.Body = docBody;
@@ -812,7 +790,26 @@ namespace Dios.Helpers
                 p.Append(r);
 
                 Append(p);
+            }
+        }
 
+        private class StandardPageMargin : PageMargin
+        {
+            public StandardPageMargin(int top = MARGIN_TOP,
+                                      uint right = MARGIN_RIGHT,
+                                      int bottom = MARGIN_BOTTOM,
+                                      uint left = MARGIN_LEFT,
+                                      uint header = MARGIN_HEADER,
+                                      uint footer = MARGIN_FOOTER,
+                                      uint gutter = MARGIN_GUTTER)
+            {
+                Top = top;
+                Right = right;
+                Bottom = bottom;
+                Left = left;
+                Header = header;
+                Footer = footer;
+                Gutter = gutter;
             }
         }
 
@@ -822,11 +819,11 @@ namespace Dios.Helpers
     /// <summary>
     /// Class allowing the Export static class to be mocked while testing
     /// </summary>
-    public class ExportWrapper : IExport
+    public sealed class ExportWrapper : IExport
     {
-        public ZipResult ExportUsers(IUsersRepository usersRepository, AddressDTO address, string path)
+        public ZipResult ExportUsers(IZipFile zipFile, IUsersRepository usersRepository, AddressDTO address, string path)
         {
-            return ExportUsers(usersRepository, address, path);
+            return Export.ExportUsers(zipFile, usersRepository, address, path);
         }
     }
 }

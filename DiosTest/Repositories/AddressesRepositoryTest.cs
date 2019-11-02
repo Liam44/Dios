@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DiosTest.Repositories
 {
-    public class AddressesRepositoryTest : IDisposable
+    public sealed class AddressesRepositoryTest : IDisposable
     {
         private readonly DbContextOptions<ApplicationDbContext> _options;
         private readonly ApplicationDbContext _dbContext;

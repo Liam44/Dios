@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dios.Models
 {
-    public class ErrorReport
+    public sealed class ErrorReport
     {
         [Key]
         public int Id { get; set; }

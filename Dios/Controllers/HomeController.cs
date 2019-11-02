@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Dios.Controllers
 {
-    public class HomeController : Controller
+    public sealed class HomeController : Controller
     {
         IUsersRepository _usersRepository;
 
@@ -32,14 +32,13 @@ namespace Dios.Controllers
                     return RedirectToAction(nameof(AccountController.ChangePassword), "Account");
                 }
 
+                // Otherwise, they're redirected to the "Flats/Index" view depending on their current role
                 if (User.IsInRole("User"))
                 {
-                    // Otherwise, they're redirected to the "Flats/Index" view
                     return RedirectToAction(nameof(UsersController.Flats), "Users");
                 }
                 else
                 {
-                    // Otherwise, they're redirected to the "Flats/Index" view
                     return RedirectToAction(nameof(HostsController.Addresses), "Hosts");
                 }
 

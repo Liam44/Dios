@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Dios.ViewModels.UsersViewModels
 {
-    public class UserCreateVM
+    public sealed class UserCreateVM
     {
         public string Id { get; set; }
 

@@ -18,7 +18,7 @@ using Xunit;
 
 namespace DiosTest.Controllers
 {
-    public class UsersControllerTest
+    public sealed class UsersControllerTest
     {
         private readonly Mock<IRequestUserProvider> _requestUserProvider;
         private readonly Mock<IEmailSender> _emailSender;

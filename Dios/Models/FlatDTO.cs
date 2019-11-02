@@ -2,7 +2,7 @@
 
 namespace Dios.Models
 {
-    public class FlatDTO
+    public sealed class FlatDTO
     {
         public int ID { get; set; } = -1;
 

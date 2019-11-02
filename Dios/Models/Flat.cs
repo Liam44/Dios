@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dios.Models
 {
-    public class Flat
+    public sealed class Flat
     {
         public int ID { get; set; }
 

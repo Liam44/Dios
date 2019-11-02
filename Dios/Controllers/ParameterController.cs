@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dios.Controllers
 {
     [Authorize(Roles = "User")]
-    public class ParameterController : Controller
+    public sealed class ParameterController : Controller
     {
         private IParametersRepository _parameterRepository;
         IFlatsRepository _flatsRepository;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dios.ViewModels.AccountViewModels
 {
-    public class ResetPasswordViewModel
+    public sealed class ResetPasswordViewModel
     {
         [Required]
         [EmailAddress]

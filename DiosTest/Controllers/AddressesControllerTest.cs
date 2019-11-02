@@ -15,7 +15,7 @@ using Xunit;
 
 namespace DiosTest.Controllers
 {
-    public class AddressesControllerTest
+    public sealed class AddressesControllerTest
     {
         private readonly Mock<IAddressesRepository> _addressesRepository;
         private readonly Mock<IFlatsRepository> _flatsRepository;
@@ -24,6 +24,7 @@ namespace DiosTest.Controllers
         private readonly Mock<IAddressHostsRepository> _addressHostsRepository;
         private readonly Mock<IHostingEnvironment> _environment;
         private readonly Mock<IExport> _export;
+        private readonly Mock<IZipFile> _zipFile;
 
         private readonly AddressesController _controller;
 
@@ -39,6 +40,7 @@ namespace DiosTest.Controllers
             _addressHostsRepository = new Mock<IAddressHostsRepository>();
             _environment = new Mock<IHostingEnvironment>();
             _export = new Mock<IExport>();
+            _zipFile = new Mock<IZipFile>();
 
             _controller = new AddressesController(_addressesRepository.Object,
                                                   _flatsRepository.Object,
@@ -46,7 +48,8 @@ namespace DiosTest.Controllers
                                                   _usersRepository.Object,
                                                   _addressHostsRepository.Object,
                                                   _environment.Object,
-                                                  _export.Object);
+                                                  _export.Object,
+                                                  _zipFile.Object);
         }
 
         #region Index
@@ -901,19 +904,19 @@ namespace DiosTest.Controllers
 
             _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
                                 .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
+            _export.Setup(e => e.ExportUsers(It.IsAny<IZipFile>(), It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
                    .Throws(new IOException());
 
             // Act
             var result = _controller.ExportUsers(addressId);
-        
+
             // Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal(nameof(_controller.Index), viewResult.ActionName);
             Assert.Null(viewResult.RouteValues);
 
             _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
+            _export.Verify(e => e.ExportUsers(_zipFile.Object, _usersRepository.Object, address, path), Times.Once);
         }
 
         [Fact]
@@ -940,7 +943,7 @@ namespace DiosTest.Controllers
 
             _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
                                 .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
+            _export.Setup(e => e.ExportUsers(It.IsAny<IZipFile>(), It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
                    .Returns(zipResult);
 
             // Act
@@ -953,7 +956,7 @@ namespace DiosTest.Controllers
             Assert.Equal(addressId, viewResult.RouteValues["id"]);
 
             _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
+            _export.Verify(e => e.ExportUsers(_zipFile.Object, _usersRepository.Object, address, path), Times.Once);
         }
 
         [Fact]
@@ -977,210 +980,12 @@ namespace DiosTest.Controllers
                                         addressId.ToString());
 
             MemoryStream memoryStream = null;
-            string contentType = "someContentType";
             string fileName = "someFileName";
-            ZipResult zipResult = new ZipResult
-            {
-                MemoryStream = memoryStream,
-                ContentType = contentType,
-                FileName = fileName
-            };
+            ZipResult zipResult = new ZipResult(fileName, memoryStream);
 
             _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
                                 .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
-                   .Returns(zipResult);
-
-            // Act
-            var result = _controller.ExportUsers(addressId);
-
-            // Assert
-            var viewResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(_controller.Details), viewResult.ActionName);
-            Assert.True(viewResult.RouteValues.ContainsKey("id"));
-            Assert.Equal(addressId, viewResult.RouteValues["id"]);
-
-            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
-        }
-
-        [Fact]
-        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_WrongContentType()
-        {
-            // Arrange
-            int addressId = 1;
-            string webRootPath = _webRootPath + addressId.ToString();
-
-            _environment.Setup(e => e.WebRootPath)
-                        .Returns(webRootPath);
-
-            AddressDTO address = new AddressDTO
-            {
-                ID = addressId
-            };
-
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
-
-            MemoryStream memoryStream = new MemoryStream();
-            string contentType = "someContentType";
-            string fileName = "someFileName";
-            ZipResult zipResult = new ZipResult
-            {
-                MemoryStream = memoryStream,
-                ContentType = contentType,
-                FileName = fileName
-            };
-
-            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
-                                .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
-                   .Returns(zipResult);
-
-            // Act
-            var result = _controller.ExportUsers(addressId);
-
-            // Assert
-            var viewResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(_controller.Details), viewResult.ActionName);
-            Assert.True(viewResult.RouteValues.ContainsKey("id"));
-            Assert.Equal(addressId, viewResult.RouteValues["id"]);
-
-            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
-        }
-
-        [Fact]
-        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_CorrectContentType_FileNameNull()
-        {
-            // Arrange
-            int addressId = 1;
-            string webRootPath = _webRootPath + addressId.ToString();
-
-            _environment.Setup(e => e.WebRootPath)
-                        .Returns(webRootPath);
-
-            AddressDTO address = new AddressDTO
-            {
-                ID = addressId
-            };
-
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
-
-            MemoryStream memoryStream = new MemoryStream();
-            string contentType = "application/text";
-            string fileName = null;
-            ZipResult zipResult = new ZipResult
-            {
-                MemoryStream = memoryStream,
-                ContentType = contentType,
-                FileName = fileName
-            };
-
-            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
-                                .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
-                   .Returns(zipResult);
-
-            // Act
-            var result = _controller.ExportUsers(addressId);
-
-            // Assert
-            var viewResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(_controller.Details), viewResult.ActionName);
-            Assert.True(viewResult.RouteValues.ContainsKey("id"));
-            Assert.Equal(addressId, viewResult.RouteValues["id"]);
-
-            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
-        }
-
-        [Fact]
-        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_CorrectContentType_FileNameEmpty()
-        {
-            // Arrange
-            int addressId = 1;
-            string webRootPath = _webRootPath + addressId.ToString();
-
-            _environment.Setup(e => e.WebRootPath)
-                        .Returns(webRootPath);
-
-            AddressDTO address = new AddressDTO
-            {
-                ID = addressId
-            };
-
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
-
-            MemoryStream memoryStream = new MemoryStream();
-            string contentType = "application/text";
-            string fileName = string.Empty;
-            ZipResult zipResult = new ZipResult
-            {
-                MemoryStream = memoryStream,
-                ContentType = contentType,
-                FileName = fileName
-            };
-
-            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
-                                .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
-                   .Returns(zipResult);
-
-            // Act
-            var result = _controller.ExportUsers(addressId);
-
-            // Assert
-            var viewResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(_controller.Details), viewResult.ActionName);
-            Assert.True(viewResult.RouteValues.ContainsKey("id"));
-            Assert.Equal(addressId, viewResult.RouteValues["id"]);
-
-            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
-        }
-
-        [Fact]
-        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_CorrectContentType_CorrectFileName()
-        {
-            // Arrange
-            int addressId = 1;
-            string webRootPath = _webRootPath + addressId.ToString();
-
-            _environment.Setup(e => e.WebRootPath)
-                        .Returns(webRootPath);
-
-            AddressDTO address = new AddressDTO
-            {
-                ID = addressId
-            };
-
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
-
-            MemoryStream memoryStream = new MemoryStream();
-            string contentType = "application/text";
-            string fileName = "someFileName";
-            ZipResult zipResult = new ZipResult
-            {
-                MemoryStream = memoryStream,
-                ContentType = contentType,
-                FileName = fileName
-            };
-
-            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
-                                .Returns(address);
-            _export.Setup(e => e.ExportUsers(It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
+            _export.Setup(e => e.ExportUsers(It.IsAny<IZipFile>(), It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
                    .Returns(zipResult);
 
             // Act
@@ -1188,12 +993,136 @@ namespace DiosTest.Controllers
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<FileStreamResult>(result);
-            Assert.Equal(memoryStream, viewResult.FileStream);
-            Assert.Equal(contentType, viewResult.ContentType);
             Assert.Equal(fileName, viewResult.FileDownloadName);
+            Assert.NotNull(viewResult.FileStream);
 
             _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
-            _export.Verify(e => e.ExportUsers(_usersRepository.Object, address, path), Times.Once);
+            _export.Verify(e => e.ExportUsers(_zipFile.Object, _usersRepository.Object, address, path), Times.Once);
+        }
+
+        [Fact]
+        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_FileNameNull()
+        {
+            // Arrange
+            int addressId = 1;
+            string webRootPath = _webRootPath + addressId.ToString();
+
+            _environment.Setup(e => e.WebRootPath)
+                        .Returns(webRootPath);
+
+            AddressDTO address = new AddressDTO
+            {
+                ID = addressId
+            };
+
+            string path = string.Format(@"{0}\{1}\{2}",
+                                        webRootPath,
+                                        _lists,
+                                        addressId.ToString());
+
+            MemoryStream memoryStream = new MemoryStream();
+            string fileName = null;
+            ZipResult zipResult = new ZipResult(fileName, memoryStream);
+
+            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
+                                .Returns(address);
+            _export.Setup(e => e.ExportUsers(It.IsAny<IZipFile>(), It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
+                   .Returns(zipResult);
+
+            // Act
+            var result = _controller.ExportUsers(addressId);
+
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_controller.Details), viewResult.ActionName);
+            Assert.True(viewResult.RouteValues.ContainsKey("id"));
+            Assert.Equal(addressId, viewResult.RouteValues["id"]);
+
+            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
+            _export.Verify(e => e.ExportUsers(_zipFile.Object, _usersRepository.Object, address, path), Times.Once);
+        }
+
+        [Fact]
+        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_FileNameEmpty()
+        {
+            // Arrange
+            int addressId = 1;
+            string webRootPath = _webRootPath + addressId.ToString();
+
+            _environment.Setup(e => e.WebRootPath)
+                        .Returns(webRootPath);
+
+            AddressDTO address = new AddressDTO
+            {
+                ID = addressId
+            };
+
+            string path = string.Format(@"{0}\{1}\{2}",
+                                        webRootPath,
+                                        _lists,
+                                        addressId.ToString());
+
+            MemoryStream memoryStream = new MemoryStream();
+            string fileName = string.Empty;
+            ZipResult zipResult = new ZipResult(fileName, memoryStream);
+
+            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
+                                .Returns(address);
+            _export.Setup(e => e.ExportUsers(It.IsAny<IZipFile>(), It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
+                   .Returns(zipResult);
+
+            // Act
+            var result = _controller.ExportUsers(addressId);
+
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_controller.Details), viewResult.ActionName);
+            Assert.True(viewResult.RouteValues.ContainsKey("id"));
+            Assert.Equal(addressId, viewResult.RouteValues["id"]);
+
+            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
+            _export.Verify(e => e.ExportUsers(_zipFile.Object, _usersRepository.Object, address, path), Times.Once);
+        }
+
+        [Fact]
+        public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_CorrectFileName()
+        {
+            // Arrange
+            int addressId = 1;
+            string webRootPath = _webRootPath + addressId.ToString();
+
+            _environment.Setup(e => e.WebRootPath)
+                        .Returns(webRootPath);
+
+            AddressDTO address = new AddressDTO
+            {
+                ID = addressId
+            };
+
+            string path = string.Format(@"{0}\{1}\{2}",
+                                        webRootPath,
+                                        _lists,
+                                        addressId.ToString());
+
+            MemoryStream memoryStream = new MemoryStream();
+            string fileName = "someFileName";
+            ZipResult zipResult = new ZipResult(fileName, memoryStream);
+
+            _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
+                                .Returns(address);
+            _export.Setup(e => e.ExportUsers(It.IsAny<IZipFile>(), It.IsAny<IUsersRepository>(), It.IsAny<AddressDTO>(), It.IsAny<string>()))
+                   .Returns(zipResult);
+
+            // Act
+            var result = _controller.ExportUsers(addressId);
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<FileStreamResult>(result);
+            Assert.Equal(fileName, viewResult.FileDownloadName);
+            Assert.Equal(memoryStream, viewResult.FileStream);
+
+            _addressesRepository.Verify(a => a.Address(addressId), Times.Once);
+            _export.Verify(e => e.ExportUsers(_zipFile.Object, _usersRepository.Object, address, path), Times.Once);
         }
 
         #endregion

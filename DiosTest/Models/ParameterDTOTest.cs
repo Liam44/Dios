@@ -3,7 +3,7 @@ using Xunit;
 
 namespace DiosTest.Models
 {
-    public class ParameterDTOTest
+    public sealed class ParameterDTOTest
     {
         [Fact]
         public void ParameterDTO_NoParameter()

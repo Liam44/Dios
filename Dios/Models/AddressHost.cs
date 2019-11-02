@@ -1,6 +1,6 @@
 ﻿namespace Dios.Models
 {
-    public class AddressHost
+    public sealed class AddressHost
     {
         public string UserId { get; set; }
 

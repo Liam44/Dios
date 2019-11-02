@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dios.Repositories
 {
-    public class FlatsRepository : IFlatsRepository
+    public sealed class FlatsRepository : IFlatsRepository
     {
         private readonly ApplicationDbContext _context;
 

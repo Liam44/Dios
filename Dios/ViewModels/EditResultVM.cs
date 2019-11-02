@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Dios.ViewModels
 {
-    public class EditResultVM
+    public sealed class EditResultVM
     {
         public string Property { get; set; }
         public string ErrorMessage { get; set; }

@@ -17,7 +17,7 @@ using Xunit;
 
 namespace DiosTest.Controllers
 {
-    public class AccountControllerTest
+    public sealed class AccountControllerTest
     {
         private Mock<IRequestUserProvider> requestUserProviderMock;
         private Mock<IRequestSignInProvider> requestSignInProviderMock;
@@ -494,7 +494,7 @@ namespace DiosTest.Controllers
             {
                 Bcc = "bcc",
                 ReplyToEmail = "replyToEmail",
-                ReplyToName = "replyToMail"
+                ReplyToName = "replyToName"
             };
 
             emailSenderMock.Setup(s => s.EmailSettings)

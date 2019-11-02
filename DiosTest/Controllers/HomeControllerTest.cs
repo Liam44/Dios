@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DiosTest.Controllers
 {
-    public class HomeControllerTest
+    public sealed class HomeControllerTest
     {
         private Mock<IUsersRepository> _usersRepositoryMock;
 

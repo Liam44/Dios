@@ -1,12 +1,12 @@
 ﻿namespace Dios.Helpers
 {
-    public class NetworkCredentials
+    public sealed class NetworkCredentials
     {
         public string UserName { get; set; }
         public string Password { get; set; }
     }
 
-    public class EmailSettings
+    public sealed class EmailSettings
     {
         public string MailServer { get; set; }
         public NetworkCredentials NetworkCredentials { get; set; }

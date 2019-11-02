@@ -2,7 +2,7 @@
 
 namespace Dios.Models
 {
-    public class UserDTO
+    public sealed class UserDTO
     {
         public string Id { get; set; } = string.Empty;
         public string PersonalNumber { get; set; } = string.Empty;

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dios.ViewModels
 {
-    public class AddressDetailsVM
+    public sealed class AddressDetailsVM
     {
         public int ID { get; set; }
 

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace DiosTest.Models
 {
-    public class AddressDTOTest
+    public sealed class AddressDTOTest
     {
         [Fact]
         public void AddressDTO_NoParameter()
