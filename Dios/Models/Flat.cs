@@ -20,7 +20,7 @@ namespace Dios.Models
 
         public override string ToString()
         {
-            return string.Format("{0} ({1})", Number, Floor);
+            return $"{Number} ({Floor})";
         }
     }
 }

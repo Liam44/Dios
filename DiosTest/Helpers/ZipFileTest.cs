@@ -15,7 +15,6 @@ namespace DiosTest.Helpers
     {
         private readonly Mock<IHostingEnvironment> _environment = new Mock<IHostingEnvironment>();
         private readonly string _localPath = Directory.GetCurrentDirectory();
-        private const string _tests = "tests";
 
         [Fact]
         public void CreateZip_PathNull()
@@ -110,7 +109,7 @@ namespace DiosTest.Helpers
         public void CreateZip_PathValid_FileNameNotEmpty_FilesNull()
         {
             // Arrange
-            string path = Path.Combine(_tests, nameof(CreateZip_PathValid_FileNameNotEmpty_FilesNull));
+            string path = nameof(CreateZip_PathValid_FileNameNotEmpty_FilesNull);
             string fileName = "someFileName";
             string expectedFileName = fileName + ".zip";
             List<string> files = null;
@@ -144,7 +143,7 @@ namespace DiosTest.Helpers
         public void CreateZip_PathValid_FileNameNotEmpty_FilesEmpty()
         {
             // Arrange
-            string path = Path.Combine(_tests, nameof(CreateZip_PathValid_FileNameNotEmpty_FilesEmpty));
+            string path = nameof(CreateZip_PathValid_FileNameNotEmpty_FilesEmpty);
             string fileName = "someFileName";
             string expectedFileName = fileName + ".zip";
             List<string> files = new List<string>();
@@ -178,7 +177,7 @@ namespace DiosTest.Helpers
         public void CreateZip_PathValid_FileNameNotEmpty_FilesNotEmpty_InvalidFileNames()
         {
             // Arrange
-            string path = Path.Combine(_tests, nameof(CreateZip_PathValid_FileNameNotEmpty_FilesNotEmpty_InvalidFileNames));
+            string path = nameof(CreateZip_PathValid_FileNameNotEmpty_FilesNotEmpty_InvalidFileNames);
             string fileName = "someFileName";
             string invalidFileName = "someInvalidFileName";
             List<string> files = new List<string> { invalidFileName };
@@ -205,7 +204,7 @@ namespace DiosTest.Helpers
         public void CreateZip_PathValid_FileNameNotEmpty_FilesNotEmpty_ValidFileNames()
         {
             // Arrange
-            string path = Path.Combine(_tests, nameof(CreateZip_PathValid_FileNameNotEmpty_FilesNotEmpty_ValidFileNames));
+            string path = nameof(CreateZip_PathValid_FileNameNotEmpty_FilesNotEmpty_ValidFileNames);
             string fileName = "someFileName";
             string expectedFileName = fileName + ".zip";
             string fileToBeZipped = "someFileToBeZipped.txt";

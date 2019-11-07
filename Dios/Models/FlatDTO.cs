@@ -19,7 +19,7 @@ namespace Dios.Models
 
         public override string ToString()
         {
-            return string.Format("{0} ({1})", Number, Floor).Trim();
+            return $"{Number} ({Floor})".Trim();
         }
 
         public FlatDTO()

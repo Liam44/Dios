@@ -71,7 +71,7 @@ namespace Dios.Controllers
             ErrorReportsVM model = new ErrorReportsVM
             {
                 FlatId = flatId,
-                Flat = flat.Number + (flat.Address == null ? string.Empty : string.Format(", {0} {1}", flat.Address.Street, flat.Address.Number)),
+                Flat = flat.Number + (flat.Address == null ? string.Empty : $", {flat.Address.Street} {flat.Address.Number}"),
                 ErrorReports = _errorRepository.ErrorReports(flatId)?.ToList()
             };
 
@@ -96,9 +96,7 @@ namespace Dios.Controllers
             ErrorReportCreateVM model = new ErrorReportCreateVM
             {
                 FlatId = flatId,
-                Flat = flat.Number + (addressDTO == null ? string.Empty : string.Format(", {0} {1}",
-                                                                                        addressDTO.Street,
-                                                                                        addressDTO.Number))
+                Flat = flat.Number + (addressDTO == null ? string.Empty : $", {addressDTO.Street} {addressDTO.Number}")
             };
 
             return View(model);
@@ -274,8 +272,7 @@ namespace Dios.Controllers
             _emailSender.EmailSettings.ReplyToName = userFrom.ToString();
 
             await _emailSender.SendEmailAsync(userTo.Email,
-                                              string.Format("Meddelande från {0}",
-                                                            userFrom.ToString()),
+                                              $"Meddelande från {userFrom.ToString()}",
                                               sendMessageVM.Message);
         }
 

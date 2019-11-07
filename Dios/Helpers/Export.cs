@@ -47,30 +47,71 @@ namespace Dios.Helpers
         private static AddressDTO _address { get; set; }
         private static string _path { get; set; }
 
-        public static ZipResult ExportUsers(IZipFile zipFile, IUsersRepository usersRepository, AddressDTO address, string path)
+        /// <summary>
+        /// Export the list of people living at a given address, according to 3 standard formats
+        /// </summary>
+        /// <param name="zipFile">Object implementing the IZipFile interface, allowing to physically create the ZIP file</param>
+        /// <param name="usersRepository">Object implementing the IUsersRepository allowing to retrieve information about users in the database</param>
+        /// <param name="address">Address where the people to be listed are living</param>
+        /// <param name="path">Path of the folder the temporary files should be saved</param>
+        /// <returns>Returns a ZIP file containing 3 .DOCX files respectively named "<address>.docx",
+        /// "<address> - Portkodstavla.docx" and "<address> - a5.docx".</returns>
+        public static ZipResult ExportUsers(IZipFile zipFile,
+                                            IUsersRepository usersRepository,
+                                            AddressDTO address,
+                                            string path)
         {
+            if (zipFile == null)
+            {
+                return new ZipResult();
+            }
+
+            if (usersRepository == null)
+            {
+                return new ZipResult();
+            }
+
+            if (address == null)
+            {
+                return new ZipResult();
+            }
+
+            if (string.IsNullOrEmpty(address.Street) || string.IsNullOrEmpty(address.Number))
+            {
+                return new ZipResult();
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return new ZipResult();
+            }
+
             _usersRepository = usersRepository;
             _address = address;
             _path = path;
 
             // Cleans the old version of generated files
-            if (Directory.Exists(path))
+            if (Directory.Exists(_path))
             {
                 try
                 {
-                    foreach (string fName in Directory.GetFiles(path))
-                    {
-                        File.Delete(fName);
-                    }
+                    ClearDirectory();
                 }
-                catch (IOException)
+                catch (Exception)
                 {
                     throw;
                 }
             }
             else
             {
-                Directory.CreateDirectory(path);
+                try
+                {
+                    Directory.CreateDirectory(_path);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
 
             // Let's start with the A4 "all users" list
@@ -78,6 +119,7 @@ namespace Dios.Helpers
 
             if (string.IsNullOrEmpty(allUsers))
             {
+                ClearDirectory();
                 throw new ExportUsersException();
             }
 
@@ -86,6 +128,7 @@ namespace Dios.Helpers
 
             if (string.IsNullOrEmpty(usersA5))
             {
+                ClearDirectory();
                 throw new ExportUsersException();
             }
 
@@ -94,22 +137,33 @@ namespace Dios.Helpers
 
             if (string.IsNullOrEmpty(entryDoorCodes))
             {
+                ClearDirectory();
                 throw new ExportUsersException();
             }
 
-            return zipFile?.CreateZip(path,
-                                      DocumentName(_address, ExportFormat.undefined, ".zip"),
-                                      new List<string> { allUsers, usersA5, entryDoorCodes });
+            return zipFile.CreateZip(DocumentName(ExportFormat.undefined, ".zip"),
+                                     _path,
+                                     new List<string> { allUsers, usersA5, entryDoorCodes });
         }
 
-        private static string DocumentName(AddressDTO address, ExportFormat exportFormat, string extention = ".docx")
+        private static void ClearDirectory()
         {
-            if (address == null)
+            try
             {
-                return string.Empty;
+                foreach (string fName in Directory.GetFiles(_path))
+                {
+                    File.Delete(fName);
+                }
             }
+            catch (IOException)
+            {
+                throw;
+            }
+        }
 
-            string fileName = string.Format("{0} {1}", address.Street, address.Number);
+        private static string DocumentName(ExportFormat exportFormat, string extention = ".docx")
+        {
+            string fileName = $"{_address.Street} {_address.Number}";
 
             switch (exportFormat)
             {
@@ -130,11 +184,12 @@ namespace Dios.Helpers
 
         private static string ExportAllUsers()
         {
-            string fileName = DocumentName(_address, ExportFormat.all);
-            string filePath = Path.Combine(_path, fileName);
+            string filePath = Path.Combine(_path, DocumentName(ExportFormat.all));
 
             // Create Document
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document, true))
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath,
+                                                                                       WordprocessingDocumentType.Document,
+                                                                                       true))
             {
                 // Add a main document part
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
@@ -160,8 +215,10 @@ namespace Dios.Helpers
                 table.Append(tr);
 
                 Dictionary<int, List<FlatDTO>> flats = _address.Flats?
+                                                               .Where(f => f != null)
+                                                               .Select(f => f)
                                                                .GroupBy(f => f.Floor)
-                                                               .OrderByDescending(fg => fg.Key)
+                                                               .OrderBy(fg => fg.Key)
                                                                .ToDictionary(fg => fg.Key,
                                                                              fg => fg.Select(f => f)
                                                                                      .ToList());
@@ -177,13 +234,15 @@ namespace Dios.Helpers
 
                     foreach (FlatDTO flat in flats[floor])
                     {
+                        // Add a new row
+                        tr = new TableRow();
+                        table.Append(tr);
+
+                        // First column - Floor
                         if (tc1 == null)
                         {
                             tc1 = new TableCellRightRedLine();
                         }
-
-                        // First column - Floor
-                        tr = new TableRow();
                         tr.Append(tc1);
 
                         // Second column - Flat number
@@ -197,6 +256,7 @@ namespace Dios.Helpers
                                 }
                             }
                         };
+                        tr.Append(tc2);
 
                         Paragraph p = new Paragraph
                         {
@@ -219,25 +279,30 @@ namespace Dios.Helpers
                                 }
                             }
                         };
-                        Run r = new Run();
+                        tc2.Append(p);
+
                         RunProperties rp = new RunProperties
                         {
                             FontSize = new FontSize { Val = SMALLFONTSIZE_ALLUSERS },
                             RunFonts = new RunFonts { HighAnsi = FONT_ALLUSERS, ComplexScript = FONT_ALLUSERS }
                         };
+
+                        Run r = new Run();
                         r.Append(rp);
                         r.Append(new Text("L. " + flat.Number));
+
                         p.Append(r);
-                        tc2.Append(p);
-                        tr.Append(tc2);
 
                         // Third column - Users
-                        Dictionary<string, List<string>> users = flat.Parameters
+                        Dictionary<string, List<string>> users = flat.Parameters?
+                                                                     .Where(param => param != null)
                                                                      .Select(param =>
                                                                      {
                                                                          param.User = _usersRepository.User(param.UserId);
                                                                          return param;
                                                                      })
+                                                                     .Where(param => param.User != null)
+                                                                     .Select(param => param)
                                                                      .GroupBy(param => param.User.LastName)
                                                                      .OrderBy(param => param.Key)
                                                                      .ToDictionary(pg => pg.Key,
@@ -255,6 +320,7 @@ namespace Dios.Helpers
                                 }
                             }
                         };
+                        tr.Append(tc3);
 
                         p = new Paragraph
                         {
@@ -266,20 +332,22 @@ namespace Dios.Helpers
                                 }
                             }
                         };
-                        r = new Run();
+                        tc3.Append(p);
+
                         rp = new RunProperties
                         {
                             FontSize = new FontSize { Val = MEDIUMFONTSIZE_ALLUSERS },
                             RunFonts = new RunFonts { HighAnsi = FONT_ALLUSERS, ComplexScript = FONT_ALLUSERS }
                         };
-                        r.Append(rp);
-                        r.Append(new Text(GetUsersNames(users)));
-                        p.Append(r);
-                        tc3.Append(p);
-                        tr.Append(tc3);
 
-                        // Add a new row
-                        table.Append(tr);
+                        r = new Run();
+                        r.Append(rp);
+                        p.Append(r);
+
+                        if (users != null)
+                        {
+                            r.Append(new Text(GetUsersNames(users)));
+                        }
 
                         tc1 = null;
                     }
@@ -306,6 +374,8 @@ namespace Dios.Helpers
                 docBody.Append(sectionProps);
 
                 mainPart.Document.Body = docBody;
+
+                wordDocument.Save();
             }
 
             return filePath;
@@ -313,11 +383,12 @@ namespace Dios.Helpers
 
         private static string ExportUsersEntryDoorCodes()
         {
-            string fileName = DocumentName(_address, ExportFormat.entryDoorCodes);
-            string filePath = Path.Combine(_path, fileName);
+            string filePath = Path.Combine(_path, DocumentName(ExportFormat.entryDoorCodes));
 
             // Create Document
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document, true))
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath,
+                                                                                       WordprocessingDocumentType.Document,
+                                                                                       true))
             {
                 // Add a main document part
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
@@ -333,50 +404,60 @@ namespace Dios.Helpers
                         Justification = new Justification { Val = JustificationValues.Right }
                     }
                 };
+                docBody.Append(paragraph);
+
                 Run run = new Run();
+                paragraph.Append(run);
+
                 RunProperties runProperties = new RunProperties
                 {
                     FontSize = new FontSize { Val = SMALLFONTSIZE_ENTRYDOORCODES },
                     RunFonts = new RunFonts { HighAnsi = FONT_ENTRYDOORCODES, ComplexScript = FONT_ENTRYDOORCODES }
                 };
+                run.Append(runProperties);
+
                 Text t = new Text
                 {
-                    Text = string.Format("{0} {1} portkodstavla", _address.Street, _address.Number)
+                    Text = $"{_address.Street} {_address.Number} portkodstavla"
                 };
                 runProperties.Append(t);
-                run.Append(runProperties);
-                paragraph.Append(run);
-                docBody.Append(paragraph);
 
                 Table table = new Table();
-
                 table.Append(new TableProperties { TableBorders = new TableBorders() });
 
                 // Empty row
                 TableRow tr = new TableRow();
-                TableCell tc1 = new TableCellRightRedLine();
-                TableCell tc2 = new TableCell(new Paragraph(new Run(new Text())));
-
-                tr.Append(tc1);
-                tr.Append(tc2);
-
                 table.Append(tr);
 
-                foreach (FlatDTO flat in _address.Flats.OrderBy(f => f.EntryDoorCode))
+                TableCell tc1 = new TableCellRightRedLine();
+                tr.Append(tc1);
+
+                TableCell tc2 = new TableCell(new Paragraph(new Run(new Text())));
+                tr.Append(tc2);
+
+                foreach (FlatDTO flat in _address.Flats?
+                                                 .Where(f => f != null)
+                                                 .Select(f => f)
+                                                 .OrderBy(f => f.EntryDoorCode))
                 {
+                    // Add a new row
                     tr = new TableRow();
+                    table.Append(tr);
 
                     // First column - Floor
                     tc1 = new TableCellRightRedLine(flat.EntryDoorCode, ExportFormat.entryDoorCodes);
                     tr.Append(tc1);
 
                     // Second column - Users
-                    Dictionary<string, List<string>> users = flat.Parameters
+                    Dictionary<string, List<string>> users = flat.Parameters?
+                                                                 .Where(param => param != null)
                                                                  .Select(param =>
                                                                  {
                                                                      param.User = _usersRepository.User(param.UserId);
                                                                      return param;
                                                                  })
+                                                                 .Where(param => param.User != null)
+                                                                 .Select(param => param)
                                                                  .GroupBy(param => param.User.LastName)
                                                                  .OrderBy(param => param.Key)
                                                                  .ToDictionary(pg => pg.Key,
@@ -394,6 +475,7 @@ namespace Dios.Helpers
                             }
                         }
                     };
+                    tr.Append(tc2);
 
                     paragraph = new Paragraph
                     {
@@ -410,20 +492,22 @@ namespace Dios.Helpers
                             }
                         }
                     };
-                    run = new Run();
+                    tc2.Append(paragraph);
+
                     runProperties = new RunProperties
                     {
                         FontSize = new FontSize { Val = MEDIUMFONTSIZE_ENTRYDOORCODES },
                         RunFonts = new RunFonts { HighAnsi = FONT_ENTRYDOORCODES, ComplexScript = FONT_ENTRYDOORCODES }
                     };
-                    run.Append(runProperties);
-                    run.Append(new Text(GetUsersNames(users)));
-                    paragraph.Append(run);
-                    tc2.Append(paragraph);
-                    tr.Append(tc2);
 
-                    // Add a new row
-                    table.Append(tr);
+                    run = new Run();
+                    run.Append(runProperties);
+                    paragraph.Append(run);
+
+                    if (users != null)
+                    {
+                        run.Append(new Text(GetUsersNames(users)));
+                    }
                 }
 
                 // Empty row in the end of the table
@@ -445,6 +529,8 @@ namespace Dios.Helpers
                 docBody.Append(sectionProps);
 
                 mainPart.Document.Body = docBody;
+
+                wordDocument.Save();
             }
 
             return filePath;
@@ -452,11 +538,12 @@ namespace Dios.Helpers
 
         private static string ExportUsersA5()
         {
-            string fileName = DocumentName(_address, ExportFormat.a5);
-            string filePath = Path.Combine(_path, fileName);
+            string filePath = Path.Combine(_path, DocumentName(ExportFormat.a5));
 
             // Create Document
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document, true))
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath,
+                                                                                       WordprocessingDocumentType.Document,
+                                                                                       true))
             {
                 // Add a main document part
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
@@ -479,24 +566,34 @@ namespace Dios.Helpers
 
                 table.Append(tr);
 
-                Dictionary<int, List<FlatDTO>> flats = _address.Flats
+                Dictionary<int, List<FlatDTO>> flats = _address.Flats?
+                                                               .Where(f => f != null)
+                                                               .Select(f => f)
                                                                .GroupBy(f => f.Floor)
-                                                               .OrderByDescending(fg => fg.Key)
+                                                               .OrderBy(fg => fg.Key)
                                                                .ToDictionary(fg => fg.Key,
                                                                              fg => fg.Select(f => f)
                                                                                      .ToList());
+                if (flats == null)
+                {
+                    return string.Empty;
+                }
+
                 foreach (int floor in flats.Keys)
                 {
                     tc1 = new TableCellRightRedLine("Vån " + floor.ToString(), ExportFormat.a5);
 
-                    foreach (FlatDTO flat in flats[floor].Where(f => f.Parameters.Count > 0))
+                    foreach (FlatDTO flat in flats[floor].Where(f => f.Parameters?.Count > 0))
                     {
                         Dictionary<string, List<string>> users = flat.Parameters
+                                                                     .Where(param => param != null)
                                                                      .Select(param =>
                                                                      {
                                                                          param.User = _usersRepository.User(param.UserId);
                                                                          return param;
                                                                      })
+                                                                     .Where(param => param.User != null)
+                                                                     .Select(param => param)
                                                                      .GroupBy(param => param.User.LastName)
                                                                      .OrderBy(param => param.Key)
                                                                      .ToDictionary(pg => pg.Key,
@@ -504,15 +601,18 @@ namespace Dios.Helpers
                                                                                            .OrderBy(fn => fn)
                                                                                            .ToList());
 
+                        // Add a new row
                         tr = new TableRow();
+                        table.Append(tr);
+
                         // First column - Floor
                         if (tc1 == null)
                         {
                             tc1 = new TableCellRightRedLine(string.Empty, ExportFormat.a5);
                         }
-
                         tr.Append(tc1);
 
+                        // Second column - Users
                         tc2 = new TableCell
                         {
                             TableCellProperties = new TableCellProperties
@@ -523,6 +623,7 @@ namespace Dios.Helpers
                                 }
                             }
                         };
+                        tr.Append(tc2);
 
                         Paragraph p = new Paragraph
                         {
@@ -539,21 +640,22 @@ namespace Dios.Helpers
                                 }
                             }
                         };
-                        Run r = new Run();
+                        tc2.Append(p);
+
                         RunProperties rp = new RunProperties
                         {
                             FontSize = new FontSize { Val = MEDIUMFONTSIZE_A5 },
                             RunFonts = new RunFonts { HighAnsi = FONT_A5, ComplexScript = FONT_A5 }
                         };
+
+                        Run r = new Run();
                         r.Append(rp);
-                        r.Append(new Text(GetUsersNames(users)));
                         p.Append(r);
-                        tc2.Append(p);
 
-                        // Second column - Users
-                        tr.Append(tc2);
-
-                        table.Append(tr);
+                        if (users != null)
+                        {
+                            r.Append(new Text(GetUsersNames(users)));
+                        }
 
                         tc1 = null;
                     }
@@ -602,6 +704,8 @@ namespace Dios.Helpers
                 docBody.Append(sectionProps);
 
                 mainPart.Document.Body = docBody;
+
+                wordDocument.Save();
             }
 
             return filePath;

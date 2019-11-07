@@ -1,4 +1,5 @@
 ﻿using Dios.Controllers;
+using Dios.Extensions;
 using Dios.Models;
 using Dios.Repositories;
 using Dios.Services;
@@ -967,6 +968,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneAddress_FlatsNull_HostsNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -1061,6 +1064,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneAddress_NoFlats_NoHosts()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -1155,6 +1160,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneAddress_OneFlat_ParametersNull_OneHost()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId1 = "someHostId1";
             string personalNumber1 = "personalNumber1";
             string firstName1 = "firstName1";
@@ -1289,6 +1296,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneAddress_TwoFlats_NoParameters_TwoHosts()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId1 = "someHostId1";
             string personalNumber1 = "personalNumber1";
             string firstName1 = "firstName1";
@@ -1457,6 +1466,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneAddress_TwoFlats_TwoParameters_TwoHosts()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId1 = "someHostId1";
             string personalNumber1 = "personalNumber1";
             string firstName1 = "firstName1";
@@ -1684,6 +1695,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneAddress_TwoFlats_ThreeParameters_TwoHosts()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId1 = "someHostId1";
             string personalNumber1 = "personalNumber1";
             string firstName1 = "firstName1";
@@ -1989,6 +2002,8 @@ namespace DiosTest.Controllers
         public void EditGet_IdNull_UserFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = null;
             string currentUserId = "someUserId";
             string userPersonalNumber = "personalNumber";
@@ -2047,6 +2062,8 @@ namespace DiosTest.Controllers
         public void EditGet_IdNotNull_UserFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string currentUserId = userId;
             string userFN = "John";
@@ -2095,6 +2112,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_InvalidModel()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFN = "John";
             string userLN = "Doe";
@@ -2134,6 +2153,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserNotFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFN = "John";
             string userLN = "Doe";
@@ -2165,6 +2186,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_DuplicatedPersonalNumber()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = "firstNameEdited";
             string userLNEdited = "lastNameEdited";
@@ -2253,6 +2276,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_EmailAddressEdited_AccountNotRegistered_DuplicatedUser()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = "firstNameEdited";
             string userLNEdited = "lastNameEdited";
@@ -2377,6 +2402,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_EmailAddressEdited_AccountNotRegistered_NoDuplicatedUser()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = "firstNameEdited";
             string userLNEdited = "lastNameEdited";
@@ -2507,6 +2534,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_NoChanges_EditedByCurrentUser()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNOriginal = "firstName";
             string userLNOriginal = "lastName";
@@ -2623,6 +2652,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_EmailAddressEdited_AccountRegistered_EditedByCurrentUser()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = "firstNameEdited";
             string userLNEdited = "lastNameEdited";
@@ -2743,6 +2774,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_EmailAddressEdited_AccountRegistered_EditedBySomeoneElse_FirstNameNotNullOrEmpty()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = "John";
             string userLNEdited = "Doe";
@@ -2796,7 +2829,7 @@ namespace DiosTest.Controllers
 
             _controller.ControllerContext = context;
 
-            string expectedStatusMessage = string.Format("{0}s profil uppdateras!", userFNEdited);
+            string expectedStatusMessage = $"{userFNEdited}s profil uppdateras!";
 
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns(originalUser);
@@ -2842,6 +2875,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_EmailAddressEdited_AccountRegistered_EditedBySomeoneElse_FirstNameNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = null;
             string userLNEdited = "Doe";
@@ -2895,7 +2930,7 @@ namespace DiosTest.Controllers
 
             _controller.ControllerContext = context;
 
-            string expectedStatusMessage = string.Format("{0}s profil uppdateras!", userLNEdited);
+            string expectedStatusMessage = $"{userLNEdited}s profil uppdateras!";
 
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns(originalUser);
@@ -2941,6 +2976,8 @@ namespace DiosTest.Controllers
         public async Task EditPost_ValidModel_UserExists_PersonalNumberNotFound_EmailAddressEdited_AccountRegistered_EditedBySomeoneElse_FirstNameEmpty()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string userFNEdited = string.Empty;
             string userLNEdited = "Doe";
@@ -2994,7 +3031,7 @@ namespace DiosTest.Controllers
 
             _controller.ControllerContext = context;
 
-            string expectedStatusMessage = string.Format("{0}s profil uppdateras!", userLNEdited);
+            string expectedStatusMessage = $"{userLNEdited}s profil uppdateras!";
 
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns(originalUser);
@@ -3080,6 +3117,8 @@ namespace DiosTest.Controllers
         public void Delete_ValidId()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3272,6 +3311,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_AddressFound_AddressHostNotFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3334,6 +3375,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_AddressFound_AddressHostFound_FlatsNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3423,6 +3466,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_AddressFound_AddressHostFound_FlatsNoEntry()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3512,6 +3557,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_AddressFound_AddressHostFound_FlatsOneEntry_ParametersNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3624,6 +3671,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_AddressFound_AddressHostFound_FlatsOneEntry_ParametersNoEntry()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3736,6 +3785,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_AddressFound_AddressHostFound_FlatsOneEntry_ParametersOneEntry()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -4931,6 +4982,8 @@ namespace DiosTest.Controllers
         public void GetErrors_OneEntry_FlatNotNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             var host = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -5018,6 +5071,8 @@ namespace DiosTest.Controllers
         public void GetErrors_TwoEntries_Flat1Null_Flat2Null()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             var host = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -5133,6 +5188,8 @@ namespace DiosTest.Controllers
         public void GetErrors_TwoEntries_Flat1NotNull_Flat2NotNull_Address1Null_Address2Null_SameAddressId()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             var host = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -5274,6 +5331,8 @@ namespace DiosTest.Controllers
         public void GetErrors_TwoEntries_Flat1NotNull_Flat2NotNull_AddressesNotNull_SameAddress()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             var host = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -5432,6 +5491,8 @@ namespace DiosTest.Controllers
         public void GetErrors_TwoEntries_Flat1NotNull_Flat2NotNull_AddressesNotNull_DifferentAddresses()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string hostId = "someHostId";
             var host = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {

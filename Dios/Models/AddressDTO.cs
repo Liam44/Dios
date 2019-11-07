@@ -22,7 +22,7 @@ namespace Dios.Models
 
         public override string ToString()
         {
-            return string.Format("{0}, {1} - {2} {3} - {4}", Street, Number, ZipCode, Town, Country).Trim().Replace("  ", " ");
+            return $"{Street}, {Number} - {ZipCode} {Town} - {Country}".Trim().Replace("  ", " ");
         }
 
         public AddressDTO()

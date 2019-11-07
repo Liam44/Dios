@@ -49,7 +49,7 @@
 
                         if (amountUnreadErrorReports > 0)
                         {
-                            unreadErrorReports = string.Format("({0})", amountUnreadErrorReports);
+                            unreadErrorReports = $"({amountUnreadErrorReports})";
                         }
                     }
                     <li><a asp-area="" asp-controller="Hosts" asp-action="ErrorReports">Felanmälningar<span class="label" style="color: black; font-size: small;">@unreadErrorReports</span></a></li>

@@ -1,5 +1,6 @@
 ﻿using Dios.Controllers;
 using Dios.Data;
+using Dios.Extensions;
 using Dios.Models;
 using Dios.Repositories;
 using Dios.Services;
@@ -75,6 +76,8 @@ namespace DiosTest.Controllers
         public void Details_ValidId_ValidFlat()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             var flatId = 2;
             var flatNumber = "2";
             var flatFloor = 2;
@@ -424,6 +427,9 @@ namespace DiosTest.Controllers
         [Fact]
         public void Delete_HttpGet_ValidIdValidFlatNoParams()
         {
+            // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             var id = 2;
             var number = "2";
             var floor = 2;
@@ -489,6 +495,8 @@ namespace DiosTest.Controllers
         public void Delete_HttpGet_ValidIdValidFlatOneParam()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             var id = 2;
             var number = "2";
             var floor = 2;
@@ -555,6 +563,8 @@ namespace DiosTest.Controllers
         public void Delete_HttpGet_ValidIdValidFlatSeveralParam()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             var id = 2;
             var number = "2";
             var floor = 2;
@@ -717,7 +727,7 @@ namespace DiosTest.Controllers
         #region GetFlat API
 
         [Fact]
-        public void GetFlat_invalidId()
+        public void GetFlat_InvalidId()
         {
             // Arrange
             int fid = 2;

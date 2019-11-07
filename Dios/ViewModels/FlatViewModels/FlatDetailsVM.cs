@@ -29,7 +29,7 @@ namespace Dios.ViewModels
 
         public override string ToString()
         {
-            return string.Format("{0} ({1})", Number, Floor);
+            return $"{Number} ({Floor})";
         }
 
         public FlatDetailsVM(FlatDTO flat, ParameterDTO parameter = null)

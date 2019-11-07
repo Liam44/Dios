@@ -1,4 +1,5 @@
 ﻿using Dios.Controllers;
+using Dios.Extensions;
 using Dios.Models;
 using Dios.Repositories;
 using Dios.Services;
@@ -95,6 +96,8 @@ namespace DiosTest.Controllers
         public void ErrorReportGet_FlatFound_AddressNotFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int flatId = 1;
             int floor = 20;
             string flatNumber = "flatNumber";
@@ -135,6 +138,8 @@ namespace DiosTest.Controllers
         public void ErrorReportGet_FlatFound_AddressFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int flatId = 1;
             int floor = 20;
             string flatNumber = "flatNumber";
@@ -166,7 +171,7 @@ namespace DiosTest.Controllers
                 Country = country
             };
 
-            string modelFlat = string.Format("{0}, {1} {2}", flatNumber, street, addressNumber);
+            string modelFlat = $"{flatNumber}, {street} {addressNumber}";
 
             _flatsRepository.Setup(f => f.Flat(It.IsAny<int?>())).Returns(flatDTO);
             _addressesRepository.Setup(a => a.Address(It.IsAny<int?>())).Returns(addressDTO);
@@ -776,6 +781,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_NoUserParameters_NoFlats()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -830,6 +837,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneUserParameter_OneFlat_FlatParametersNull_AddressesNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -923,6 +932,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneUserParameter_OneFlat_NoFlatParameters()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -1039,6 +1050,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_OneUserParameter_OneFlat_OneFlatParameter()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -1169,6 +1182,8 @@ namespace DiosTest.Controllers
         public void Details_IdFound_TwoUserParameters_TwoFlats_TwoFlatParameters()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -2452,7 +2467,7 @@ namespace DiosTest.Controllers
 
             _controller.ControllerContext = context;
 
-            string expectedStatusMessage = string.Format("{0}s profil uppdateras!", userFNEdited);
+            string expectedStatusMessage = $"{userFNEdited}s profil uppdateras!";
 
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns(originalUser);
@@ -2551,7 +2566,7 @@ namespace DiosTest.Controllers
 
             _controller.ControllerContext = context;
 
-            string expectedStatusMessage = string.Format("{0}s profil uppdateras!", userLNEdited);
+            string expectedStatusMessage = $"{userLNEdited}s profil uppdateras!";
 
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns(originalUser);
@@ -2650,7 +2665,7 @@ namespace DiosTest.Controllers
 
             _controller.ControllerContext = context;
 
-            string expectedStatusMessage = string.Format("{0}s profil uppdateras!", userLNEdited);
+            string expectedStatusMessage = $"{userLNEdited}s profil uppdateras!";
 
             _usersRepository.Setup(u => u.User(It.IsAny<string>()))
                                 .Returns(originalUser);
@@ -2736,6 +2751,8 @@ namespace DiosTest.Controllers
         public void Delete_ValidId()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -2878,6 +2895,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_FlatNotFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -2920,6 +2939,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_FlatFound_ParametersNotFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -2975,6 +2996,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_FlatFound_ParameterFound_AddressNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";
@@ -3090,6 +3113,8 @@ namespace DiosTest.Controllers
         public void Remove_UserIdNotNull_UserFound_FlatFound_ParameterFound_AddressNotNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             string userId = "someUserId";
             string personalNumber = "personalNumber";
             string firstName = "firstName";

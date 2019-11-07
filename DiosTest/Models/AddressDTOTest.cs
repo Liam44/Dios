@@ -129,12 +129,7 @@ namespace DiosTest.Models
 
             AddressDTO addressDTO = new AddressDTO(address);
 
-            string toString = string.Format("{0}, {1} - {2} {3} - {4}",
-                                            street,
-                                            number,
-                                            zipCode,
-                                            town,
-                                            country);
+            string toString = $"{street}, {number} - {zipCode} {town} - {country}";
 
             // Act
             var result = addressDTO.ToString();

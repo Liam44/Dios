@@ -1,4 +1,5 @@
 ﻿using Dios.Controllers;
+using Dios.Extensions;
 using Dios.Helpers;
 using Dios.Models;
 using Dios.Repositories;
@@ -110,6 +111,8 @@ namespace DiosTest.Controllers
         public void Details_ValidId_NoFlats_NoHosts_DataCanBeDeleted()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int? addressId = 1;
             string street = "street";
             string number = "number";
@@ -187,6 +190,8 @@ namespace DiosTest.Controllers
         public void Details_ValidId_OneFlat_NoParameter_OneHost_DataCanNotBeDeleted()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int? addressId = 1;
             string street = "street";
             string number = "number";
@@ -317,6 +322,8 @@ namespace DiosTest.Controllers
         public void Details_ValidId_OneFlat_ThreeParameters_ThreeHosts_DataCanNotBeDeleted()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int? addressId = 1;
             string street = "street";
             string number = "number";
@@ -768,6 +775,8 @@ namespace DiosTest.Controllers
         public void Delete_Get_IdFound()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int? addressId = 1;
             string street = "street";
             string number = "number";
@@ -886,6 +895,8 @@ namespace DiosTest.Controllers
         public void ExportUsers_AddressNotNull_IOException()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int addressId = 1;
             string webRootPath = _webRootPath + addressId.ToString();
 
@@ -897,10 +908,7 @@ namespace DiosTest.Controllers
                 ID = addressId
             };
 
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
+            string path = $@"{webRootPath}\{_lists}\{addressId.ToString()}";
 
             _addressesRepository.Setup(a => a.Address(It.IsAny<int>()))
                                 .Returns(address);
@@ -923,6 +931,8 @@ namespace DiosTest.Controllers
         public void ExportUsers_AddressNotNull_ExportFailed()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int addressId = 1;
             string webRootPath = _webRootPath + addressId.ToString();
 
@@ -934,10 +944,7 @@ namespace DiosTest.Controllers
                 ID = addressId
             };
 
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
+            string path = $@"{webRootPath}\{_lists}\{addressId.ToString()}";
 
             ZipResult zipResult = null;
 
@@ -963,6 +970,8 @@ namespace DiosTest.Controllers
         public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int addressId = 1;
             string webRootPath = _webRootPath + addressId.ToString();
 
@@ -974,10 +983,7 @@ namespace DiosTest.Controllers
                 ID = addressId
             };
 
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
+            string path = $@"{webRootPath}\{_lists}\{addressId.ToString()}";
 
             MemoryStream memoryStream = null;
             string fileName = "someFileName";
@@ -1004,6 +1010,8 @@ namespace DiosTest.Controllers
         public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_FileNameNull()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int addressId = 1;
             string webRootPath = _webRootPath + addressId.ToString();
 
@@ -1015,10 +1023,7 @@ namespace DiosTest.Controllers
                 ID = addressId
             };
 
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
+            string path = $@"{webRootPath}\{_lists}\{addressId.ToString()}";
 
             MemoryStream memoryStream = new MemoryStream();
             string fileName = null;
@@ -1046,6 +1051,8 @@ namespace DiosTest.Controllers
         public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_FileNameEmpty()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int addressId = 1;
             string webRootPath = _webRootPath + addressId.ToString();
 
@@ -1057,10 +1064,7 @@ namespace DiosTest.Controllers
                 ID = addressId
             };
 
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
+            string path = $@"{webRootPath}\{_lists}\{addressId.ToString()}";
 
             MemoryStream memoryStream = new MemoryStream();
             string fileName = string.Empty;
@@ -1088,6 +1092,8 @@ namespace DiosTest.Controllers
         public void ExportUsers_AddressNotNull_ExportSucceeded_MemoryStreamNotNull_CorrectFileName()
         {
             // Arrange
+            NavigationProperties.NavigationPropertiesWrapper = new NavigationPropertiesWrapper();
+
             int addressId = 1;
             string webRootPath = _webRootPath + addressId.ToString();
 
@@ -1099,10 +1105,7 @@ namespace DiosTest.Controllers
                 ID = addressId
             };
 
-            string path = string.Format(@"{0}\{1}\{2}",
-                                        webRootPath,
-                                        _lists,
-                                        addressId.ToString());
+            string path = $@"{webRootPath}\{_lists}\{addressId.ToString()}";
 
             MemoryStream memoryStream = new MemoryStream();
             string fileName = "someFileName";
